@@ -72,6 +72,7 @@ public class NavigateActivity extends Activity
 		TextView yV = (TextView)findViewById(R.id.yValue);
 		TextView zV = (TextView)findViewById(R.id.zValue);
 		
+		float compassOffset = 180;
 		
 		xV.setText("X:" + se.values[0]);
 		yV.setText("Y:" + se.values[1]);
@@ -85,7 +86,9 @@ public class NavigateActivity extends Activity
 		
 		zV.setText("Calculated Angle:" + Dangle);
 		
-		img.setRotation((float)Dangle);
+		img.setRotation(compassOffset + (float)Dangle);
+		
+		//change
 	}
 	
 	
