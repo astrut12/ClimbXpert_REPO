@@ -72,6 +72,7 @@ public class NavigateActivity extends Activity
 		TextView yV = (TextView)findViewById(R.id.yValue);
 		TextView zV = (TextView)findViewById(R.id.zValue);
 		
+		float compassOffset = 180;
 		
 		xV.setText("X:" + se.values[0]);
 		yV.setText("Y:" + se.values[1]);
@@ -85,7 +86,7 @@ public class NavigateActivity extends Activity
 		
 		zV.setText("Calculated Angle:" + Dangle);
 		
-		img.setRotation((float)Dangle);
+		img.setRotation(compassOffset + (float)Dangle);
 	}
 	
 	
@@ -97,7 +98,6 @@ public class NavigateActivity extends Activity
 	 */
 	public double getAngle(double x, double y)
 	{
-		// just for git
 		//TODO Check if there is a simpler way to calculate this
 		double Dangle;
 		if (x<0)
