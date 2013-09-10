@@ -83,7 +83,7 @@ public class NavigateActivity extends Activity
 		double Dangle = getAngle(x,y);
 		
 		
-		zV.setText("Angle:" + Dangle);
+		zV.setText("Calculated Angle:" + Dangle);
 		
 		img.setRotation((float)Dangle);
 	}
