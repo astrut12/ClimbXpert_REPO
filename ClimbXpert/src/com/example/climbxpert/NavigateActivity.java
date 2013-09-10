@@ -87,6 +87,8 @@ public class NavigateActivity extends Activity
 		zV.setText("Calculated Angle:" + Dangle);
 		
 		img.setRotation(compassOffset + (float)Dangle);
+		
+		//change
 	}
 	
 	
