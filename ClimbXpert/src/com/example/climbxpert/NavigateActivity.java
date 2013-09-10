@@ -88,7 +88,7 @@ public class NavigateActivity extends Activity
 		
 		img.setRotation(compassOffset + (float)Dangle);
 		
-		//change
+		//change another change
 	}
 	
 	
