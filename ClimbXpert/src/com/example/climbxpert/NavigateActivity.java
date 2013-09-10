@@ -97,7 +97,7 @@ public class NavigateActivity extends Activity
 	 */
 	public double getAngle(double x, double y)
 	{
-		// just for git
+		// just for git fffffffffffff
 		//TODO Check if there is a simpler way to calculate this
 		double Dangle;
 		if (x<0)
