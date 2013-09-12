@@ -9,6 +9,9 @@ import com.google.android.gms.maps.model.LatLng;
 // The POI is the general location where the routes are located
 public class POI {
 
+	// ID for the POI
+	public int ID;
+	
 	// The displayed name of the POI	
 	public String name;
 	
@@ -26,8 +29,9 @@ public class POI {
 
 	
 	
-	public POI(String arg_name, String arg_info, LatLng arg_carNavigation, List<StandLocation> arg_standLocationList)
+	public POI(int arg_id, String arg_name, String arg_info, LatLng arg_carNavigation, List<StandLocation> arg_standLocationList)
 	{
+		ID = arg_id;
 		name = arg_name;
 		info = arg_info;
 		carNavigation = arg_carNavigation;
