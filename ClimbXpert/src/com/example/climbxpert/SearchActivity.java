@@ -12,6 +12,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -27,15 +28,21 @@ public class SearchActivity extends FragmentActivity
 			OnMyLocationButtonClickListener //listen to clicks on the location buttons
 {
 
+	// A map element to refer to the map fragment
 	private GoogleMap map;
+	
+	// Client for connecting to location service
 	private LocationClient locClient;
 	
-	
-	 private static final LocationRequest REQUEST = LocationRequest.create()
+	// Options for location requests
+	private static final LocationRequest REQUEST = LocationRequest.create()
 	            .setInterval(5000)         // 5 seconds
 	            .setFastestInterval(16)    // 16ms = 60fps
 	            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
 	 			//TODO consider lowering the accuracy - this may affect performance
+	
+	// The last received location from the location service
+	private Location lastKnownLocation;
 	
 	
 	@Override
@@ -47,20 +54,21 @@ public class SearchActivity extends FragmentActivity
 	}
 
 	
-	
-	
-	
+	/***
+	 * Disconnect from location service
+	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
-		//TODO: consider wrapping locClient with null check or putting action in utility function
-		locClient.disconnect();
+		
+		if (null != locClient)
+			locClient.disconnect();
 	}
 
-
-
-
-
+	/***
+	 * Connect to the location service.
+	 * On first load will initialize the map location client members. 
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -87,12 +95,19 @@ public class SearchActivity extends FragmentActivity
 				map.setMyLocationEnabled(true);
 				
 				map.setOnMyLocationButtonClickListener(this);
+				
+				map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+				
+				//initializing a set of markers for the map.
+				insertMarkers();
+				
 			}
 			
 		}
 	}
 	
-	/**
+	
+	/***
 	 * initialize the locClient object if not already initialized
 	 */
 	public void setupLocationClient()
@@ -116,20 +131,18 @@ public class SearchActivity extends FragmentActivity
 	 */
 	@Override
 	public void onLocationChanged(Location location) {
-		
-		
-		
-		LoggerTools.LogToast(this, "Location was changed:" + location);
-		
-		//TODO add logic that check if the camera should be updated or not (during navigation etc.)
-		//maybe make it update the location on first connection only
-		
-		map.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-					.target(new LatLng(location.getLatitude(), location.getLongitude()))
-                    .zoom(15.5f)
-                    .bearing(300)//TODO: need to check the compass direction and insert it into the bearing
-                    .tilt(0)
-                    .build()));
+				
+		if (null == lastKnownLocation)
+		{
+			//first time we get the location
+			lastKnownLocation = location;
+			MoveToCurrentLocation();
+		}
+		else
+		{
+			lastKnownLocation = location;
+			
+		}
 	}
 
 	/**
@@ -148,7 +161,6 @@ public class SearchActivity extends FragmentActivity
 	public void onConnected(Bundle connectionHint) {
 		//requesting to be notified on location changes. the REQUEST object will define the update rate and accuracy
 		locClient.requestLocationUpdates(REQUEST, this);
-		//TODO maybe add a flag notification that a connection was made - can be useful to know the first connection
 	}
 
 	/**
@@ -156,7 +168,6 @@ public class SearchActivity extends FragmentActivity
 	 */
 	@Override
 	public void onDisconnected() {
-		// TODO Consider what to do here - notification? abort?
 		
 	}
 
@@ -167,12 +178,67 @@ public class SearchActivity extends FragmentActivity
 	@Override
 	public boolean onMyLocationButtonClick() {
 
-		//TODO add call to set current camera location
+		MoveToCurrentLocation();
 		
-		LoggerTools.LogToast(this, "Location button clicked");
-		
-		return false; //false to allow default handling of location button click 
+		return false; 
 	}
 
+	
+	//Private functions
+
+	/***
+	 * Loading the POI into the map
+	 */
+	private void insertMarkers()
+	{
+		//TODO replace this set of markers with locations from the application's POI database
+		
+		map.addMarker(new MarkerOptions()
+					.position(new LatLng(31.762, 35.201))
+					.title("test1"));
+		
+		map.addMarker(new MarkerOptions()
+					.position(new LatLng(31.764, 35.204))
+					.title("test2"));
+		
+		map.addMarker(new MarkerOptions()
+					.position(new LatLng(31.762, 35.203))
+					.title("test3"));
+	}
+	
+	
+	/***
+	 * Move the map's camera to the current location.
+	 * The current location is stored asynchronously whenever a location change is received.
+	 */
+	private void MoveToCurrentLocation()
+	{
+		if (null != lastKnownLocation)
+		{
+			MoveToLocation(new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude()));
+		}
+		else
+		{
+			LoggerTools.LogToast(this, "Corrent location not known yet");
+		}
+	}
+	
+	
+	/***
+	 * Move the map's camera to the given coordinates.
+	 * @param latlng	The coordinates to move the camera to
+	 */
+	private void MoveToLocation(LatLng latlng)
+	{
+		if (null != latlng && null != map)
+		{	
+			map.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+			.target(latlng)
+	        .zoom(15.5f)
+	        .bearing(300)//TODO: need to check the compass direction and insert it into the bearing
+	        .tilt(0)
+	        .build()));
+		}
+	}
 
 }
