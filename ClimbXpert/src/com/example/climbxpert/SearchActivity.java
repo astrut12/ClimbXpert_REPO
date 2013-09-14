@@ -10,6 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,7 +32,8 @@ public class SearchActivity extends FragmentActivity
 			ConnectionCallbacks, //allow connection to location service
 			OnConnectionFailedListener, //notify when connection to location service failed
 			LocationListener, //listen to location changes
-			OnMyLocationButtonClickListener //listen to clicks on the location buttons
+			OnMyLocationButtonClickListener, //listen to clicks on the location buttons
+			OnInfoWindowClickListener //listen to click events for marker's info bubbles
 {
 
 	// A map element to refer to the map fragment
@@ -104,7 +106,12 @@ public class SearchActivity extends FragmentActivity
 				
 				map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 				
+				//replacing the default marker info window 
 				map.setInfoWindowAdapter(new POIInfoWindowAdapter());
+				
+				//setting listener for infoWindow clicks
+				map.setOnInfoWindowClickListener(this);
+				
 				//initializing a set of markers for the map.
 				insertMarkers();
 				
@@ -250,9 +257,24 @@ public class SearchActivity extends FragmentActivity
 		}
 	}
 
+
+	/**
+	 * Handler for markers' info window clicks.
+	 */
+	@Override
+	public void onInfoWindowClick(Marker marker) {
+		//TODO open some activity to display more options 
+		
+		LoggerTools.LogToast(this, "Marker info was clicked");
+		
+	}
 	
 	
-	class POIInfoWindowAdapter implements InfoWindowAdapter {
+	/**
+	 * The class replaces the default handler for rendering Markers' info bubbles. 
+	 *
+	 */
+	public class POIInfoWindowAdapter implements InfoWindowAdapter {
 		
 		private final View markerContent;
 		
@@ -267,6 +289,9 @@ public class SearchActivity extends FragmentActivity
 		@Override
 		public View getInfoContents(Marker marker) {
 	
+			
+			//TODO find the POI in the POI database and insert the relevant information below.
+			
 			((TextView) markerContent.findViewById(R.id.markerTextView1)).setText("The title: " + marker.getTitle());
 			
 			((TextView) markerContent.findViewById(R.id.markerTextView2)).setText("The content: " + marker.getTitle());
@@ -289,5 +314,7 @@ public class SearchActivity extends FragmentActivity
 		}
 
 	}
+
+
 	
 }

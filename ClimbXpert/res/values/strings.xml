@@ -10,5 +10,6 @@
     <string name="navigate">Navigate</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_navigate">NavigateActivity</string>
+    <string name="image_not_available">Image for the POI is not available</string>
 
 </resources>
