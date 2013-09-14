@@ -9,15 +9,21 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.example.climbxpert.LoggerTools;
 
 public class SearchActivity extends FragmentActivity 
@@ -98,6 +104,7 @@ public class SearchActivity extends FragmentActivity
 				
 				map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 				
+				map.setInfoWindowAdapter(new POIInfoWindowAdapter());
 				//initializing a set of markers for the map.
 				insertMarkers();
 				
@@ -192,6 +199,8 @@ public class SearchActivity extends FragmentActivity
 	private void insertMarkers()
 	{
 		//TODO replace this set of markers with locations from the application's POI database
+		//TODO consider passing the POI ID within the Marker Snippet attribute.
+		
 		
 		map.addMarker(new MarkerOptions()
 					.position(new LatLng(31.762, 35.201))
@@ -241,4 +250,44 @@ public class SearchActivity extends FragmentActivity
 		}
 	}
 
+	
+	
+	class POIInfoWindowAdapter implements InfoWindowAdapter {
+		
+		private final View markerContent;
+		
+		public POIInfoWindowAdapter() {
+			markerContent = getLayoutInflater().inflate(R.layout.poi_marker, null);
+
+		}
+		
+		/***
+		 * creating a view to display inside a POI marker bubble.
+		 */
+		@Override
+		public View getInfoContents(Marker marker) {
+	
+			((TextView) markerContent.findViewById(R.id.markerTextView1)).setText("The title: " + marker.getTitle());
+			
+			((TextView) markerContent.findViewById(R.id.markerTextView2)).setText("The content: " + marker.getTitle());
+			
+			((ImageView) markerContent.findViewById(R.id.markerImage)).setImageResource(0);
+
+			
+			return markerContent;
+		}
+
+		
+		/***
+		 * Does nothing (skip to {@see POIInfoWindowAdapter#getInfoContents(Marker)})
+		 */
+		@Override
+		public View getInfoWindow(Marker marker) {
+			//return null since we want to set the content only (for now)
+			//if we want to control the whole look of the bubble we should implement this instead.
+			return null;
+		}
+
+	}
+	
 }
