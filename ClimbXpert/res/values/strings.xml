@@ -11,5 +11,8 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_navigate">NavigateActivity</string>
     <string name="image_not_available">Image for the POI is not available</string>
+    <string name="camera_view_button_label">Camera View</string>
+    <string name="title_activity_camera_view">CameraViewActivity</string>
+    <string name="title_activity_camera">Camera</string>
 
 </resources>

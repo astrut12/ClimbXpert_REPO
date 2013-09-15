@@ -53,4 +53,11 @@ public class MainActivity extends Activity {
     	startActivity(intent);
     }
     
+    public void openCameraView(View view)
+    {
+    	Intent intent = new Intent(this, CameraViewActivity.class);
+    	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
+    	startActivity(intent);
+    }
+    
 }
