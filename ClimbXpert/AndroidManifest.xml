@@ -57,6 +57,7 @@
         <activity
             android:name="com.example.climbxpert.CameraViewActivity"
             android:label="@string/title_activity_camera_view"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             android:screenOrientation="landscape">
         </activity>
         <activity

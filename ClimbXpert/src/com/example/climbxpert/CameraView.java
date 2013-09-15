@@ -1,10 +1,12 @@
 package com.example.climbxpert;
 
 import java.io.IOException;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
+import android.hardware.Camera.Size;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -31,6 +33,13 @@ public class CameraView extends SurfaceView implements Callback {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
             mCamera.setPreviewDisplay(holder);
+            
+            Camera.Parameters camParams = mCamera.getParameters();
+            List<Size> Sizes = camParams.getSupportedPreviewSizes();
+            camParams.setPreviewSize(Sizes.get(0).width, Sizes.get(0).height);
+            mCamera.setParameters(camParams);
+            
+            
             mCamera.startPreview();
         } catch (IOException e) {
             LoggerTools.LogToast(mActivity, "Error setting camera preview: " + e.getMessage());
