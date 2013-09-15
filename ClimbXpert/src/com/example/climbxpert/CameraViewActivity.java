@@ -1,7 +1,6 @@
 package com.example.climbxpert;
 
 import android.hardware.Camera;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -11,6 +10,7 @@ public class CameraViewActivity extends Activity {
 
     private Camera mCamera;
     private CameraView mPreview;
+    private RouteDrawView mDraw;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +26,11 @@ public class CameraViewActivity extends Activity {
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraView(this, mCamera);
+        mDraw = new RouteDrawView(this);
+        
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
         preview.addView(mPreview);
+        preview.addView(mDraw);
 	}
 
 	@Override
