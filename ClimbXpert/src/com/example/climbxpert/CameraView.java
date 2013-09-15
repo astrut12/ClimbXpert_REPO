@@ -5,7 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.hardware.Camera;
+import android.hardware.Camera;dd
 import android.hardware.Camera.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
