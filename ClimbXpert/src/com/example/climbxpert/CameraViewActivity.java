@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 public class CameraViewActivity extends Activity {
 
     private Camera mCamera;
     private CameraView mPreview;
-    private RouteDrawView mDraw;
+//    private RouteDrawView mDraw;
+    private ImageView mRouteImageView;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +28,15 @@ public class CameraViewActivity extends Activity {
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraView(this, mCamera);
-        mDraw = new RouteDrawView(this);
+//        mDraw = new RouteDrawView(this);
+        mRouteImageView = new ImageView(this);
+        mRouteImageView.setImageResource(R.drawable.test);
+        
         
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
         preview.addView(mPreview);
-        preview.addView(mDraw);
+//        preview.addView(mDraw);
+        preview.addView(mRouteImageView);
 	}
 
 	@Override
