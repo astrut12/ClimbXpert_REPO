@@ -19,24 +19,6 @@ public class CameraViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera_view);
 		
-        // Create an instance of Camera
-        mCamera = getCameraInstance();
-        if (mCamera == null) {
-        	LoggerTools.LogToast(this, "could not initiate camera.");
-        	finishActivity(RESULT_CANCELED);
-        }
-
-        // Create our Preview view and set it as the content of our activity.
-        mPreview = new CameraView(this, mCamera);
-//        mDraw = new RouteDrawView(this);
-        mRouteImageView = new ImageView(this);
-        mRouteImageView.setImageResource(R.drawable.test);
-        
-        
-        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
-        preview.addView(mPreview);
-//        preview.addView(mDraw);
-        preview.addView(mRouteImageView);
 	}
 
 	@Override
@@ -60,14 +42,54 @@ public class CameraViewActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        releaseCamera();              // release the camera immediately on pause event
+        releaseCamera();
+    }
+    
+    
+    @Override
+    protected void onResume()
+    {
+    	super.onResume();
+    	// Create an instance of Camera
+        mCamera = getCameraInstance();
+        if (mCamera == null) {
+        	LoggerTools.LogToast(this, "could not initiate camera.");
+        	finishActivity(RESULT_CANCELED);
+        }
+        
+        // Create our Preview view and set it as the content of our activity.
+        mPreview = new CameraView(this, mCamera);
+//        mDraw = new RouteDrawView(this);
+        mRouteImageView = new ImageView(this);
+        mRouteImageView.setImageResource(R.drawable.test);
+        
+        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
+        preview.addView(mPreview);
+//        preview.addView(mDraw);
+        preview.addView(mRouteImageView);
+        
     }
 
+    /**
+     * Releasing camera resources
+     */
     private void releaseCamera(){
-        if (mCamera != null){
+        if (mRouteImageView != null)
+        {
+        	mRouteImageView = null;
+        }
+    	
+    	if (mPreview != null)
+        {
+        	mPreview.closeView();
+        	mPreview = null;
+        }
+    	
+    	if (mCamera != null){
             mCamera.release();        // release the camera for other applications
             mCamera = null;
         }
+        
     }
 
 }

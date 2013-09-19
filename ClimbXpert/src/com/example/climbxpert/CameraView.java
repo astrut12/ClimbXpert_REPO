@@ -55,5 +55,10 @@ public class CameraView extends SurfaceView implements Callback {
 			int height) {
 		// empty. Suits only full horizontal view.
 	}
+	
+	public void closeView()
+	{
+		mHolder.removeCallback(this);
+	}
 
 }
