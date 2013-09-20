@@ -31,6 +31,7 @@ public class CameraViewActivity extends Activity
     private ImageView mRouteImageView;
     
     private POI currPoi;
+    PhoneOrientation currStandOrientation;
     
     //sensors
     private SensorManager sensMngr;
@@ -38,9 +39,13 @@ public class CameraViewActivity extends Activity
 	private Sensor graviSensor;
     
 	
-	private float[] lastMagneticData = {0,0,0};
-	private float[] lastGravityData = {0,0,0};
-
+	private float currAzimuth;
+	private float currTilt;
+	
+	private final float AZIMUTH_TOLERANCE = 100;
+	
+	private final float TILT_TOLERANCE = 100;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +61,12 @@ public class CameraViewActivity extends Activity
 		
 		stlc.StandInMap = new LatLng(31.762, 35.201);
 		stlc.StandOrientation = new PhoneOrientation();
-		//setting the coordinates for orientation
-		stlc.StandOrientation.GravityTolerance = 5;
-		stlc.StandOrientation.xGravity = (float) 9.7;
-		stlc.StandOrientation.yGravity = (float) 0.5;
-		stlc.StandOrientation.zGravity = (float) 0.5;
-		stlc.StandOrientation.MagneticTolerance = 5;
-		stlc.StandOrientation.xMagnetic = (float) -28.5;
-		stlc.StandOrientation.yMagnetic = (float) 1.6;
-		stlc.StandOrientation.zMagnetic = (float) 22.3;
+
+		//setting the tilt and azimuth of the orientation		
+		stlc.StandOrientation.azimuth = (float) 91;
+		stlc.StandOrientation.tilt = (float) 0;
+		
+		currStandOrientation = stlc.StandOrientation;
 		
 		standLocList.add(stlc);
 		
@@ -208,33 +210,19 @@ public class CameraViewActivity extends Activity
 	public void onSensorChanged(SensorEvent event) {
 		if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
 		{
-			lastMagneticData[0] = event.values[0];
-			lastMagneticData[1] = event.values[1];
-			lastMagneticData[2] = event.values[2];
+			// for azimuth use Y and Z axis of the magnetic field 
+			currAzimuth = (float) MathOrientation.getAngle(event.values[1], event.values[2]);
 		}
 		if (event.sensor.getType() == Sensor.TYPE_GRAVITY)
 		{
-			lastGravityData[0] = event.values[0];
-			lastGravityData[1] = event.values[1];
-			lastGravityData[2] = event.values[2];
+			// for tilt use X and Z axis of the gravity field
+			currTilt = (float) MathOrientation.getAngle(event.values[0], event.values[2]);
 		}
-		
-//		StringBuilder sb = new StringBuilder();
-//		sb.append("xg=" + lastGravityData[0] + "\n");
-//		sb.append("yg=" + lastGravityData[1] + "\n");
-//		sb.append("zg=" + lastGravityData[2] + "\n");
-//		
-//		sb.append("xm=" + lastMagneticData[0] + "\n");
-//		sb.append("ym=" + lastMagneticData[1] + "\n");
-//		sb.append("zm=" + lastMagneticData[2] + "\n");
-//		
-//		LoggerTools.LogToastShort(this, sb.toString());
-		
-		
 		
 		
 		if (checkProximity())
 		{
+			positionBitmap();
 			mRouteImageView.setVisibility(View.VISIBLE);
 		}
 		else
@@ -251,14 +239,27 @@ public class CameraViewActivity extends Activity
 	 */
 	private boolean checkProximity()
 	{
-		if (currPoi.standLocationList.get(0).StandOrientation.
-				CheckGravityProximity(lastGravityData[0], lastGravityData[1], lastGravityData[2]) &&
-				currPoi.standLocationList.get(0).StandOrientation.
-				CheckMagneticProximity(lastMagneticData[0], lastMagneticData[1], lastMagneticData[2]))
+		
+		if (Math.abs(currStandOrientation.azimuth - currAzimuth) < AZIMUTH_TOLERANCE &&
+				Math.abs(currStandOrientation.tilt - currTilt) < TILT_TOLERANCE	)
 		{
 			return true;
 		}
 		return false;
+	}
+	
+	
+	/**
+	 * calculates the offsets of the bitmap according to the current tilt and 
+	 */
+	private void positionBitmap()
+	{
+		//TODO calculate the proper scaling for vertical alignment
+		int verticalScale = 40;
+		
+		mRouteImageView.setTop((int)((currStandOrientation.azimuth - currAzimuth)*verticalScale));
+		
+		//TODO implement the same offset for the azimuth
 	}
 
 }

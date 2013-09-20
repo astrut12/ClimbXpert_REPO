@@ -64,15 +64,13 @@ public class NavigateActivity extends Activity
 		//		2. x,y coordinates from current location and compared to target
 		//		3. use calculated coordinates to set the compass direction with deviation to the actual magnetic field
 		
-		//TODO:	There seems to be a deviation in the compass direction. 
-		//		It seems that the Z coordinate should also be included in defining the directions.
 		
 		ImageView img = (ImageView)findViewById(R.id.arrowImage);
 		TextView xV = (TextView)findViewById(R.id.xValue);
 		TextView yV = (TextView)findViewById(R.id.yValue);
 		TextView zV = (TextView)findViewById(R.id.zValue);
 		
-		float compassOffset = 180;
+		float compassOffset = 0;
 		
 		xV.setText("X:" + se.values[0]);
 		yV.setText("Y:" + se.values[1]);
@@ -81,49 +79,16 @@ public class NavigateActivity extends Activity
 		float y = se.values[1];
 		
 		
-		double Dangle = getAngle(x,y);
+		double Dangle = MathOrientation.getAngle(x,y);
 		
 		
 		zV.setText("Calculated Angle:" + Dangle);
 		
-		img.setRotation(compassOffset + (float)Dangle);
+		img.setRotation(compassOffset - (float)Dangle);
 		
-		//change another change
 	}
 	
 	
-	/**
-	 * Calculate the angle from X and Y coordinates
-	 * @param x The X coordinate
-	 * @param y The Y coordinate
-	 * @return The angle that the coordinates create with the X axis
-	 */
-	public double getAngle(double x, double y)
-	{
-		// just for git fffffffffffff
-		//TODO Check if there is a simpler way to calculate this
-		double Dangle;
-		if (x<0)
-		{
-			Dangle = 180 - Math.toDegrees(Math.atan((y/x)));
-		}
-		else if (x>0)
-		{
-			Dangle = - Math.toDegrees(Math.atan((y/x)));
-		}
-		else
-		{
-			if (y>=0)
-			{
-				Dangle = 90;
-			}
-			else
-			{
-				Dangle = -90;
-			}
-		}
-		
-		return Dangle;
-	}
+	
 
 }

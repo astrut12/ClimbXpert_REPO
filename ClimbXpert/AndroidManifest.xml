@@ -57,12 +57,16 @@
         <activity
             android:name="com.example.climbxpert.CameraViewActivity"
             android:label="@string/title_activity_camera_view"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
             android:name="com.example.climbxpert.Camera"
             android:label="@string/title_activity_camera" >
+        </activity>
+        <activity
+            android:name="com.example.climbxpert.TestActivity"
+            android:label="@string/title_activity_test" >
         </activity>
     </application>
 

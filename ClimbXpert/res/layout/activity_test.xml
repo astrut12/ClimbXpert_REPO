@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".TestActivity" >
+
+    <TextView
+        android:id="@+id/tvgx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvmx"
+        android:layout_alignBottom="@+id/tvmx"
+        android:layout_alignLeft="@+id/tvgz"
+        android:text="GX" />
+
+    <TextView
+        android:id="@+id/tvgy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvgx"
+        android:layout_below="@+id/tvgx"
+        android:text="GY" />
+
+    <TextView
+        android:id="@+id/tvgz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvgy"
+        android:layout_marginLeft="71dp"
+        android:layout_toRightOf="@+id/tvmx"
+        android:text="GZ" />
+
+    <TextView
+        android:id="@+id/tvmy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvgz"
+        android:layout_alignLeft="@+id/tvmx"
+        android:text="MY" />
+
+    <TextView
+        android:id="@+id/tvmz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvmy"
+        android:layout_below="@+id/tvmy"
+        android:text="MZ" />
+    
+    <TextView
+        android:id="@+id/tvmyza"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvgx"
+        android:layout_alignBottom="@+id/tvgx"
+        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@+id/tvgx"
+        android:text="MYZAngle" />
+
+    <TextView
+        android:id="@+id/tvgxza"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvgz"
+        android:layout_alignLeft="@+id/tvmyza"
+        android:text="GXZAngle" />
+
+    <TextView
+        android:id="@+id/tvmx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:text="MX" />
+
+</RelativeLayout>

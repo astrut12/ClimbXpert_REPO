@@ -14,5 +14,6 @@
     <string name="camera_view_button_label">Camera View</string>
     <string name="title_activity_camera_view">CameraViewActivity</string>
     <string name="title_activity_camera">Camera</string>
+    <string name="title_activity_test">TestActivity</string>
 
 </resources>

@@ -60,4 +60,12 @@ public class MainActivity extends Activity {
     	startActivity(intent);
     }
     
+    
+    public void openTestView(View view)
+    {
+    	Intent intent = new Intent(this, TestActivity.class);
+    	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
+    	startActivity(intent);
+    }
+    
 }

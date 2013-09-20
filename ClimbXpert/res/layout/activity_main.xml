@@ -9,7 +9,7 @@
     tools:context=".MainActivity" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/tvmx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -21,7 +21,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/tvmx"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp"
         android:gravity="center_vertical|center_horizontal"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="20dp"
         android:text="@string/search" 
         android:onClick="openSearch"/>
 
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/MainSearchButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="20dp"
         android:text="@string/navigate"
         android:onClick="openNavigate" />
 
@@ -54,8 +54,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/MainNavButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp"
+        android:layout_marginTop="20dp"
         android:onClick="openCameraView"
         android:text="@string/camera_view_button_label" />
 
+    <Button
+        android:id="@+id/TestingViewButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/CameraViewButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:onClick="openTestView"
+        android:text="Test View" />
+    
 </RelativeLayout>
