@@ -240,8 +240,8 @@ public class CameraViewActivity extends Activity
 	private boolean checkProximity()
 	{
 		
-		if (Math.abs(currStandOrientation.azimuth - currAzimuth) < AZIMUTH_TOLERANCE &&
-				Math.abs(currStandOrientation.tilt - currTilt) < TILT_TOLERANCE	)
+		if (Math.abs(currStandOrientation.getAzimuthDifference(currAzimuth)) < AZIMUTH_TOLERANCE &&
+				Math.abs(currStandOrientation.getTiltDifference(currTilt)) < TILT_TOLERANCE	)
 		{
 			return true;
 		}
@@ -256,10 +256,15 @@ public class CameraViewActivity extends Activity
 	{
 		//TODO calculate the proper scaling for vertical alignment
 		int verticalScale = 40;
+		int horizontalScale = 40;
 		
-		mRouteImageView.setTop((int)((currStandOrientation.azimuth - currAzimuth)*verticalScale));
+		//TODO add some calculation the make the positioning less sensitive. 
+		//		perhaps add some average of last positions to "buffer" the changes 
 		
-		//TODO implement the same offset for the azimuth
+		mRouteImageView.setLeft(-(int)((currStandOrientation.getAzimuthDifference(currAzimuth))*verticalScale));
+		
+		mRouteImageView.setTop(-(int)((currStandOrientation.getTiltDifference(currTilt))*horizontalScale));
+		
 	}
 
 }
