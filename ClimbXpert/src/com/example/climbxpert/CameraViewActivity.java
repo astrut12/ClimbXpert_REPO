@@ -33,18 +33,23 @@ public class CameraViewActivity extends Activity
     private POI currPoi;
     PhoneOrientation currStandOrientation;
     
+    
     //sensors
     private SensorManager sensMngr;
 	private Sensor magnoSensor;
 	private Sensor graviSensor;
     
+	private final int BUFFER_SENSOR = 30;
 	
-	private float currAzimuth;
-	private float currTilt;
+	private float[] currAzimuth = new float[BUFFER_SENSOR];
+	private int currIndAz = 0;
+	private float[] currTilt = new float[BUFFER_SENSOR];;
+	private int currIndTi = 0;
 	
 	private final float AZIMUTH_TOLERANCE = 100;
 	
 	private final float TILT_TOLERANCE = 100;
+	
 	
 	
 	@Override
@@ -179,8 +184,8 @@ public class CameraViewActivity extends Activity
     		graviSensor = sensMngr.getDefaultSensor(Sensor.TYPE_GRAVITY);
     	}
     	
-    	sensMngr.registerListener(this, magnoSensor,SensorManager.SENSOR_DELAY_NORMAL);
-    	sensMngr.registerListener(this, graviSensor,SensorManager.SENSOR_DELAY_NORMAL);
+    	sensMngr.registerListener(this, magnoSensor,SensorManager.SENSOR_DELAY_FASTEST);
+    	sensMngr.registerListener(this, graviSensor,SensorManager.SENSOR_DELAY_FASTEST);
     	
     }
     
@@ -211,12 +216,16 @@ public class CameraViewActivity extends Activity
 		if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
 		{
 			// for azimuth use Y and Z axis of the magnetic field 
-			currAzimuth = (float) MathOrientation.getAngle(event.values[1], event.values[2]);
+			currAzimuth[currIndAz] = (float) MathOrientation.getAngle(event.values[1], event.values[2]);
+			
+			currIndAz = (currIndAz<BUFFER_SENSOR-1 ? currIndAz + 1 : 0);
 		}
 		if (event.sensor.getType() == Sensor.TYPE_GRAVITY)
 		{
 			// for tilt use X and Z axis of the gravity field
-			currTilt = (float) MathOrientation.getAngle(event.values[0], event.values[2]);
+			currTilt[currIndTi] = (float) MathOrientation.getAngle(event.values[0], event.values[2]);
+			
+			currIndTi = (currIndTi<BUFFER_SENSOR-1 ? currIndTi + 1 : 0);
 		}
 		
 		
@@ -240,8 +249,8 @@ public class CameraViewActivity extends Activity
 	private boolean checkProximity()
 	{
 		
-		if (Math.abs(currStandOrientation.getAzimuthDifference(currAzimuth)) < AZIMUTH_TOLERANCE &&
-				Math.abs(currStandOrientation.getTiltDifference(currTilt)) < TILT_TOLERANCE	)
+		if (Math.abs(currStandOrientation.getAzimuthDifference(currAzimuth[0])) < AZIMUTH_TOLERANCE &&
+				Math.abs(currStandOrientation.getTiltDifference(currTilt[0])) < TILT_TOLERANCE	)
 		{
 			return true;
 		}
@@ -258,12 +267,20 @@ public class CameraViewActivity extends Activity
 		int verticalScale = 40;
 		int horizontalScale = 40;
 		
-		//TODO add some calculation the make the positioning less sensitive. 
-		//		perhaps add some average of last positions to "buffer" the changes 
 		
-		mRouteImageView.setLeft(-(int)((currStandOrientation.getAzimuthDifference(currAzimuth))*verticalScale));
+		float azimuth = 0;
+		float tilt = 0;
 		
-		mRouteImageView.setTop(-(int)((currStandOrientation.getTiltDifference(currTilt))*horizontalScale));
+		for (int i=0; i<BUFFER_SENSOR; i++)
+		{
+			azimuth += currAzimuth[i] / BUFFER_SENSOR;
+			tilt += currTilt[i] / BUFFER_SENSOR;
+		}
+		
+		
+		mRouteImageView.setLeft(-(int)((currStandOrientation.getAzimuthDifference(azimuth))*verticalScale));
+		
+		mRouteImageView.setTop(-(int)((currStandOrientation.getTiltDifference(tilt))*horizontalScale));
 		
 	}
 
