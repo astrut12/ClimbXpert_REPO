@@ -1,12 +1,7 @@
 package com.example.climbxpert;
 
 import java.util.ArrayList;
-
-import com.example.climbxpert.POI.POI;
-import com.example.climbxpert.POI.PhoneOrientation;
-import com.example.climbxpert.POI.StandLocation;
-import com.google.android.gms.maps.model.LatLng;
-
+import com.example.climbxpert.POI.ClimbRoute;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -16,22 +11,16 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.view.Menu;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class CameraViewActivity extends Activity
 			implements SensorEventListener{
 
     private Camera mCamera;
     private CameraView mPreview;
-//    private RouteDrawView mDraw;
-    private ImageView mRouteImageView;
     
-    private POI currPoi;
-    PhoneOrientation currStandOrientation;
+    private ArrayList<ClimbRoute> orientationList;
     
     
     //sensors
@@ -60,22 +49,23 @@ public class CameraViewActivity extends Activity
 		
 		//TODO this is an example POI. this should be replaced with the current POI
 		//this set of coordinates work in my apartment facing the computer... (itai)
-		ArrayList<StandLocation> standLocList = new ArrayList<StandLocation>();
 		
-		StandLocation stlc = new StandLocation();
+		orientationList = new ArrayList<ClimbRoute>();
 		
-		stlc.StandInMap = new LatLng(31.762, 35.201);
-		stlc.StandOrientation = new PhoneOrientation();
-
-		//setting the tilt and azimuth of the orientation		
-		stlc.StandOrientation.azimuth = (float) 91;
-		stlc.StandOrientation.tilt = (float) 0;
+        ClimbRoute firstOrientation = new ClimbRoute();
+        firstOrientation.azimuth = (float) 91;
+        firstOrientation.tilt = (float) 0;
+        firstOrientation.imgView = new ImageView(this);
+        firstOrientation.imgView.setImageResource(R.drawable.test);
+        orientationList.add(firstOrientation);
+        
+        ClimbRoute secondOrientation = new ClimbRoute();
+        secondOrientation.azimuth = (float) 95;
+        secondOrientation.tilt = (float) 0;
+        secondOrientation.imgView = new ImageView(this);
+        secondOrientation.imgView.setImageResource(R.drawable.test);
+        orientationList.add(secondOrientation);
 		
-		currStandOrientation = stlc.StandOrientation;
-		
-		standLocList.add(stlc);
-		
-		currPoi = new POI(1, "Example POI", "Information on this POI", new LatLng(31.764, 35.204), standLocList);
 		
 	}
 
@@ -127,14 +117,14 @@ public class CameraViewActivity extends Activity
         
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraView(this, mCamera);
-//        mDraw = new RouteDrawView(this);
-        mRouteImageView = new ImageView(this);
-        mRouteImageView.setImageResource(R.drawable.test);
         
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
         preview.addView(mPreview);
-//        preview.addView(mDraw);
-        preview.addView(mRouteImageView);
+        
+        for (ClimbRoute po : orientationList)
+        {
+        	preview.addView(po.imgView);
+        }
                 
         subscribeToSensors();
     }
@@ -145,12 +135,7 @@ public class CameraViewActivity extends Activity
     private void releaseCamera(){
         
     	unsubscribeSensors();
-    	
-    	if (mRouteImageView != null)
-        {
-        	mRouteImageView = null;
-        }
-    	
+    	    	
     	if (mPreview != null)
         {
         	mPreview.closeView();
@@ -228,7 +213,9 @@ public class CameraViewActivity extends Activity
 			currIndTi = (currIndTi<BUFFER_SENSOR-1 ? currIndTi + 1 : 0);
 		}
 		
+		positionBitmap();
 		
+		/*
 		if (checkProximity())
 		{
 			positionBitmap();
@@ -237,7 +224,7 @@ public class CameraViewActivity extends Activity
 		else
 		{
 			mRouteImageView.setVisibility(View.INVISIBLE);
-		}
+		}*/
 	}
 	
 	
@@ -246,7 +233,7 @@ public class CameraViewActivity extends Activity
 	 * current standing location orientation.
 	 * @return True if the last known coordinates match the standing location orientation, false otherwise.
 	 */
-	private boolean checkProximity()
+	/*private boolean checkProximity()
 	{
 		
 		if (Math.abs(currStandOrientation.getAzimuthDifference(currAzimuth[0])) < AZIMUTH_TOLERANCE &&
@@ -255,7 +242,7 @@ public class CameraViewActivity extends Activity
 			return true;
 		}
 		return false;
-	}
+	}*/
 	
 	
 	/**
@@ -277,11 +264,13 @@ public class CameraViewActivity extends Activity
 			tilt += currTilt[i] / BUFFER_SENSOR;
 		}
 		
+		for (ClimbRoute po : orientationList)
+		{
 		
-		mRouteImageView.setLeft(-(int)((currStandOrientation.getAzimuthDifference(azimuth))*verticalScale));
-		
-		mRouteImageView.setTop(-(int)((currStandOrientation.getTiltDifference(tilt))*horizontalScale));
-		
+			po.imgView.setLeft(-(int)((po.getAzimuthDifference(azimuth))*verticalScale));
+			
+			po.imgView.setTop(-(int)((po.getTiltDifference(tilt))*horizontalScale));
+		}
 	}
 
 }

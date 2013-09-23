@@ -24,24 +24,23 @@ public class POI {
 	// Latitude and Longitude of the car navigation location
 	public LatLng carNavigation;
 	
+	// Latitude and Longitude of the standing location
+	public LatLng standLocation;
+		
+	
 	// List of standing location in the POI area
-	public ArrayList<StandLocation> standLocationList;
+	public ArrayList<ClimbRoute> routes;
 
 	
 	
-	public POI(int arg_id, String arg_name, String arg_info, LatLng arg_carNavigation, List<StandLocation> arg_standLocationList)
+	public POI(int arg_id, String arg_name, String arg_info, LatLng arg_carNavigation, 
+				LatLng arg_standLocation, ArrayList<ClimbRoute> arg_routes)
 	{
 		ID = arg_id;
 		name = arg_name;
 		info = arg_info;
 		carNavigation = arg_carNavigation;
-		if (null != arg_standLocationList)
-		{
-			standLocationList = new ArrayList<StandLocation>(arg_standLocationList);
-		}
-		else
-		{
-			standLocationList = new ArrayList<StandLocation>();
-		}
+		standLocation = arg_standLocation;
+		routes = new ArrayList<ClimbRoute>(arg_routes);
 	}
 }
