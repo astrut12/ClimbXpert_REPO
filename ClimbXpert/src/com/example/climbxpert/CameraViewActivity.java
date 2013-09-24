@@ -20,9 +20,7 @@ public class CameraViewActivity extends Activity
     private Camera mCamera;
     private CameraView mPreview;
     
-    //private ArrayList<ClimbRoute> orientationList;
-    
-    private ArrayList<RouteImageConnector> orientationList;
+    private ArrayList<RouteImageConnector> routeList = new ArrayList<RouteImageConnector>();
     
     
     //sensors
@@ -35,10 +33,6 @@ public class CameraViewActivity extends Activity
 	private SensorBuffer azimuthSensBuffer = new SensorBuffer(SENSOR_BUFFER_SIZE);
 	private SensorBuffer tiltSensBuffer = new SensorBuffer(SENSOR_BUFFER_SIZE);
 	
-	private final float AZIMUTH_TOLERANCE = 100;
-	
-	private final float TILT_TOLERANCE = 100;
-	
 	
 	
 	@Override
@@ -50,22 +44,19 @@ public class CameraViewActivity extends Activity
 		//TODO this is an example POI. this should be replaced with the current POI
 		//this set of coordinates work in my apartment facing the computer... (itai)
 		
-		orientationList = new ArrayList<RouteImageConnector>();
 		
-        ClimbRoute firstOrientation = new ClimbRoute();
-        firstOrientation.azimuth = (float) 91;
-        firstOrientation.tilt = (float) 0;
-        ImageView tmpView = new ImageView(this);
-        tmpView.setImageResource(R.drawable.test);
-        orientationList.add(new RouteImageConnector(firstOrientation, tmpView));
+        ClimbRoute firstRoute = new ClimbRoute();
+        firstRoute.azimuth = (float) 91;
+        firstRoute.tilt = (float) 0;
+        firstRoute.imageRscID = R.drawable.test;
+        loadRoute(firstRoute);
         
         
-        ClimbRoute secondOrientation = new ClimbRoute();
-        secondOrientation.azimuth = (float) 95;
-        secondOrientation.tilt = (float) 0;
-        tmpView = new ImageView(this);
-        tmpView.setImageResource(R.drawable.test);
-        orientationList.add(new RouteImageConnector(secondOrientation, tmpView));
+        ClimbRoute secondRoute = new ClimbRoute();
+        secondRoute.azimuth = (float) 95;
+        secondRoute.tilt = (float) 0;
+        secondRoute.imageRscID = R.drawable.test;
+        loadRoute(secondRoute);
 		
 		
 	}
@@ -122,7 +113,7 @@ public class CameraViewActivity extends Activity
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
         preview.addView(mPreview);
         
-        for (RouteImageConnector po : orientationList)
+        for (RouteImageConnector po : routeList)
         {
         	preview.addView(po.imgView);
         }
@@ -225,7 +216,7 @@ public class CameraViewActivity extends Activity
 		int horizontalScale = 25;
 		
 		
-		for (RouteImageConnector po : orientationList)
+		for (RouteImageConnector po : routeList)
 		{
 		
 			po.imgView.setLeft(-(int)((po.route.getAzimuthDifference(azimuthSensBuffer.getAvarageData()))*verticalScale));
@@ -234,8 +225,21 @@ public class CameraViewActivity extends Activity
 		}
 	}
 
+	/**
+	 * Loads a ClimbRoute to the Route List  
+	 * @param route The ClimbRoute to add
+	 */
+	private void loadRoute(ClimbRoute route)
+	{
+		ImageView tmpView = new ImageView(this);
+        tmpView.setImageResource(route.imageRscID);
+        routeList.add(new RouteImageConnector(route, tmpView));
+	}
 	
 	
+	/**
+	 * A class that connects the image view that is represented on top of the camera to the route information
+	 */
 	private class RouteImageConnector
 	{
 		public ClimbRoute route;
