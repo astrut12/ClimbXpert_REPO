@@ -1,6 +1,5 @@
 package com.example.climbxpert.POI;
 
-import android.widget.ImageView;
 
 public class ClimbRoute {
 
@@ -51,10 +50,6 @@ public class ClimbRoute {
 	// The tilt controls the gravity orientation (0 for horizontal)
 	public float tilt;
 	
-	
-	//ImageView that can be used when presenting the route
-	//TODO move this to somewhere else. this should be places with the camera view activity and be matched to the route.
-	public ImageView imgView;
 	
 	public float getTiltDifference(float compareTilt)
 	{

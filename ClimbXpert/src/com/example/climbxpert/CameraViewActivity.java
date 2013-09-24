@@ -20,7 +20,9 @@ public class CameraViewActivity extends Activity
     private Camera mCamera;
     private CameraView mPreview;
     
-    private ArrayList<ClimbRoute> orientationList;
+    //private ArrayList<ClimbRoute> orientationList;
+    
+    private ArrayList<RouteImageConnector> orientationList;
     
     
     //sensors
@@ -48,21 +50,22 @@ public class CameraViewActivity extends Activity
 		//TODO this is an example POI. this should be replaced with the current POI
 		//this set of coordinates work in my apartment facing the computer... (itai)
 		
-		orientationList = new ArrayList<ClimbRoute>();
+		orientationList = new ArrayList<RouteImageConnector>();
 		
         ClimbRoute firstOrientation = new ClimbRoute();
         firstOrientation.azimuth = (float) 91;
         firstOrientation.tilt = (float) 0;
-        firstOrientation.imgView = new ImageView(this);
-        firstOrientation.imgView.setImageResource(R.drawable.test);
-        orientationList.add(firstOrientation);
+        ImageView tmpView = new ImageView(this);
+        tmpView.setImageResource(R.drawable.test);
+        orientationList.add(new RouteImageConnector(firstOrientation, tmpView));
+        
         
         ClimbRoute secondOrientation = new ClimbRoute();
         secondOrientation.azimuth = (float) 95;
         secondOrientation.tilt = (float) 0;
-        secondOrientation.imgView = new ImageView(this);
-        secondOrientation.imgView.setImageResource(R.drawable.test);
-        orientationList.add(secondOrientation);
+        tmpView = new ImageView(this);
+        tmpView.setImageResource(R.drawable.test);
+        orientationList.add(new RouteImageConnector(secondOrientation, tmpView));
 		
 		
 	}
@@ -119,7 +122,7 @@ public class CameraViewActivity extends Activity
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
         preview.addView(mPreview);
         
-        for (ClimbRoute po : orientationList)
+        for (RouteImageConnector po : orientationList)
         {
         	preview.addView(po.imgView);
         }
@@ -222,13 +225,26 @@ public class CameraViewActivity extends Activity
 		int horizontalScale = 25;
 		
 		
-		for (ClimbRoute po : orientationList)
+		for (RouteImageConnector po : orientationList)
 		{
 		
-			po.imgView.setLeft(-(int)((po.getAzimuthDifference(azimuthSensBuffer.getAvarageData()))*verticalScale));
+			po.imgView.setLeft(-(int)((po.route.getAzimuthDifference(azimuthSensBuffer.getAvarageData()))*verticalScale));
 			
-			po.imgView.setTop(-(int)((po.getTiltDifference(tiltSensBuffer.getAvarageData()))*horizontalScale));
+			po.imgView.setTop(-(int)((po.route.getTiltDifference(tiltSensBuffer.getAvarageData()))*horizontalScale));
 		}
 	}
 
+	
+	
+	private class RouteImageConnector
+	{
+		public ClimbRoute route;
+		public ImageView imgView;
+		
+		public RouteImageConnector(ClimbRoute climbRoute, ImageView imageView)
+		{
+			route = climbRoute;
+			imgView = imageView;
+		}
+	}
 }
