@@ -1,7 +1,6 @@
 package com.example.climbxpert.POI;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -18,9 +17,9 @@ public class POI {
 	// Information presented about the POI
 	public String info;
 	
-	// The picture representing the POI
-	//TODO: define the format for the picture (is it a picture object or path to stored picture)
-
+	// The resource ID of the picture representing the POI
+	public int imageID;	
+	
 	// Latitude and Longitude of the car navigation location
 	public LatLng carNavigation;
 	
@@ -33,12 +32,13 @@ public class POI {
 
 	
 	
-	public POI(int arg_id, String arg_name, String arg_info, LatLng arg_carNavigation, 
+	public POI(int arg_id, String arg_name, String arg_info, int arg_imageID, LatLng arg_carNavigation, 
 				LatLng arg_standLocation, ArrayList<ClimbRoute> arg_routes)
 	{
 		ID = arg_id;
 		name = arg_name;
 		info = arg_info;
+		imageID = arg_imageID;
 		carNavigation = arg_carNavigation;
 		standLocation = arg_standLocation;
 		routes = new ArrayList<ClimbRoute>(arg_routes);
