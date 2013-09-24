@@ -28,12 +28,10 @@ public class CameraViewActivity extends Activity
 	private Sensor magnoSensor;
 	private Sensor graviSensor;
     
-	private final int BUFFER_SENSOR = 30;
+	private final int SENSOR_BUFFER_SIZE = 30;
 	
-	private float[] currAzimuth = new float[BUFFER_SENSOR];
-	private int currIndAz = 0;
-	private float[] currTilt = new float[BUFFER_SENSOR];;
-	private int currIndTi = 0;
+	private SensorBuffer azimuthSensBuffer = new SensorBuffer(SENSOR_BUFFER_SIZE);
+	private SensorBuffer tiltSensBuffer = new SensorBuffer(SENSOR_BUFFER_SIZE);
 	
 	private final float AZIMUTH_TOLERANCE = 100;
 	
@@ -201,75 +199,35 @@ public class CameraViewActivity extends Activity
 		if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
 		{
 			// for azimuth use Y and Z axis of the magnetic field 
-			currAzimuth[currIndAz] = (float) MathOrientation.getAngle(event.values[1], event.values[2]);
-			
-			currIndAz = (currIndAz<BUFFER_SENSOR-1 ? currIndAz + 1 : 0);
+			azimuthSensBuffer.addSensorData((float) MathOrientation.getAngle(event.values[1], event.values[2]));
 		}
 		if (event.sensor.getType() == Sensor.TYPE_GRAVITY)
 		{
 			// for tilt use X and Z axis of the gravity field
-			currTilt[currIndTi] = (float) MathOrientation.getAngle(event.values[0], event.values[2]);
-			
-			currIndTi = (currIndTi<BUFFER_SENSOR-1 ? currIndTi + 1 : 0);
+			tiltSensBuffer.addSensorData((float) MathOrientation.getAngle(event.values[0], event.values[2]));
 		}
 		
-		positionBitmap();
-		
-		/*
-		if (checkProximity())
-		{
-			positionBitmap();
-			mRouteImageView.setVisibility(View.VISIBLE);
-		}
-		else
-		{
-			mRouteImageView.setVisibility(View.INVISIBLE);
-		}*/
+		positionBitmaps();
 	}
 	
-	
-	/**
-	 * check if the last known coordinates for magnetic and gravity fields are matching the 
-	 * current standing location orientation.
-	 * @return True if the last known coordinates match the standing location orientation, false otherwise.
-	 */
-	/*private boolean checkProximity()
-	{
-		
-		if (Math.abs(currStandOrientation.getAzimuthDifference(currAzimuth[0])) < AZIMUTH_TOLERANCE &&
-				Math.abs(currStandOrientation.getTiltDifference(currTilt[0])) < TILT_TOLERANCE	)
-		{
-			return true;
-		}
-		return false;
-	}*/
 	
 	
 	/**
 	 * calculates the offsets of the bitmap according to the current tilt and 
 	 */
-	private void positionBitmap()
+	private void positionBitmaps()
 	{
 		//TODO calculate the proper scaling for vertical alignment
-		int verticalScale = 40;
-		int horizontalScale = 40;
+		int verticalScale = 25;
+		int horizontalScale = 25;
 		
-		
-		float azimuth = 0;
-		float tilt = 0;
-		
-		for (int i=0; i<BUFFER_SENSOR; i++)
-		{
-			azimuth += currAzimuth[i] / BUFFER_SENSOR;
-			tilt += currTilt[i] / BUFFER_SENSOR;
-		}
 		
 		for (ClimbRoute po : orientationList)
 		{
 		
-			po.imgView.setLeft(-(int)((po.getAzimuthDifference(azimuth))*verticalScale));
+			po.imgView.setLeft(-(int)((po.getAzimuthDifference(azimuthSensBuffer.getAvarageData()))*verticalScale));
 			
-			po.imgView.setTop(-(int)((po.getTiltDifference(tilt))*horizontalScale));
+			po.imgView.setTop(-(int)((po.getTiltDifference(tiltSensBuffer.getAvarageData()))*horizontalScale));
 		}
 	}
 

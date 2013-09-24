@@ -92,6 +92,11 @@ public class ClimbRoute {
 		
 	}
 	
+	/**
+	 * Calculates the equivalent angle in the range 0:360  
+	 * @param angle The angle to normalize
+	 * @return the equivalent angle within 0:360 range
+	 */
 	private float normalizeAngle(float angle)
 	{
 		//non integer part + normalized part
