@@ -1,9 +1,18 @@
 package com.example.climbxpert;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.model.LatLng;
+
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -13,11 +22,32 @@ import android.widget.TextView;
 
 public class NavigateActivity extends Activity 
 				implements
-				SensorEventListener{
+				SensorEventListener, // listen to sensor events
+				ConnectionCallbacks, //allow connection to location service
+				OnConnectionFailedListener, //notify when connection to location service failed
+				LocationListener //listen to location changes
+{
 
 	private SensorManager sensMngr;
 	private Sensor magno;
 	
+	
+	// Client for connecting to location service
+	private LocationClient locClient;
+	
+	// Options for location requests
+	private static final LocationRequest REQUEST = LocationRequest.create()
+	            .setInterval(5000)         // 5 seconds
+	            .setFastestInterval(16)    // 16ms = 60fps
+	            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
+	 			//TODO consider lowering the accuracy - this may affect performance
+	
+	// The last received location from the location service
+	private Location lastKnownLocation;
+	
+	private LatLng targetLocation;
+	
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,6 +56,8 @@ public class NavigateActivity extends Activity
 		sensMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		magno = sensMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
+		//TODO this is an example location. should be replaced with actual data from POI
+		targetLocation = new LatLng(31.76297,35.202067);
 		
 	}
 
@@ -34,12 +66,18 @@ public class NavigateActivity extends Activity
 	{
 		super.onResume();
 		sensMngr.registerListener(this, magno, SensorManager.SENSOR_DELAY_NORMAL);
+		setupLocationClient();
+		locClient.connect();
 	}
 	
 	@Override
 	protected void onPause(){
 		super.onPause();
 		sensMngr.unregisterListener(this);
+		if (null != locClient)
+		{
+			locClient.disconnect();
+		}
 	}
 	
 	@Override
@@ -69,11 +107,14 @@ public class NavigateActivity extends Activity
 		TextView xV = (TextView)findViewById(R.id.xValue);
 		TextView yV = (TextView)findViewById(R.id.yValue);
 		TextView zV = (TextView)findViewById(R.id.zValue);
+		TextView tV = (TextView)findViewById(R.id.targetOffset);
 		
 		float compassOffset = 0;
+		float locationOffset =  getAngleToLocation();
 		
 		xV.setText("X:" + se.values[0]);
 		yV.setText("Y:" + se.values[1]);
+		tV.setText("target:" + locationOffset);
 		
 		float x = se.values[0];
 		float y = se.values[1];
@@ -84,11 +125,58 @@ public class NavigateActivity extends Activity
 		
 		zV.setText("Calculated Angle:" + Dangle);
 		
-		img.setRotation(compassOffset - (float)Dangle);
+		img.setRotation(compassOffset - locationOffset - (float)Dangle);
 		
+	}
+
+	
+	/***
+	 * initialize the locClient object if not already initialized
+	 */
+	public void setupLocationClient()
+	{
+		if (null == locClient)
+		{
+			locClient = new LocationClient(getApplicationContext(), this, this);
+		}
 	}
 	
 	
+	@Override
+	public void onLocationChanged(Location location) {
+		lastKnownLocation = location;
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		LoggerTools.LogToast(this, "Could not get current location information. Check GPS availability");
+	}
+
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		locClient.requestLocationUpdates(REQUEST, this);		
+	}
+
+	@Override
+	public void onDisconnected() {
+		// Do nothing		
+	}
+	
+	
+	private float getAngleToLocation()
+	{
+		
+		if (null == lastKnownLocation)
+		{
+			return 0; // no current location yet
+			
+		}
+		
+		//TODO check x, y matching (lat to x, lng to y?)
+		return (float) MathOrientation.getAngle(lastKnownLocation.getLatitude() - targetLocation.latitude,
+								lastKnownLocation.getLongitude() - targetLocation.longitude);
+		
+	}
 	
 
 }

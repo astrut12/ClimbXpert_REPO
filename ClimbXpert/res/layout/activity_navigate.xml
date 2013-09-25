@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/arrowImage"
         android:layout_toRightOf="@+id/yValue"
-        android:text="X" />
+        android:text="Z" />
 
     <TextView
         android:id="@+id/yValue"
@@ -40,5 +40,14 @@
         android:layout_alignRight="@+id/arrowImage"
         android:layout_alignTop="@+id/arrowImage"
         android:text="X" />
+
+    <TextView
+        android:id="@+id/targetOffset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/arrowImage"
+        android:layout_alignLeft="@+id/arrowImage"
+        android:layout_marginBottom="34dp"
+        android:text="target" />
 
 </RelativeLayout>
