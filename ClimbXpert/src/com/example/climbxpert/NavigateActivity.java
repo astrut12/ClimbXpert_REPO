@@ -178,5 +178,22 @@ public class NavigateActivity extends Activity
 		
 	}
 	
+	
+	private double getDistanceToTarget()
+	{
+		if (null == lastKnownLocation)
+		{
+			return -1;
+		}
+		
+		double x = lastKnownLocation.getLatitude() - targetLocation.latitude;
+		double y = lastKnownLocation.getLongitude() - targetLocation.longitude;
+		
+		//TODO add some scaling for the distance
+		
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+		
+	}
+	
 
 }
