@@ -48,21 +48,21 @@ public class MainActivity extends Activity {
 
 	private void getPOIfromServer() throws ParseException {
 		
-		double lon,lat,azimuth;
-		int id;
+		double lon,lat;
+		int pid,imgId;
 		String name,info;
 		POI poi;
 		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("POI");
 		ClimbXpertData.POIList = new ArrayList<POI>();
 		
 		for(ParseObject po : query.find()) {
-			id = po.getInt("pid");
+			pid = po.getInt("pid");
 			name = po.getString("name");
 			info = po.getString("info");
 			lon = po.getDouble("lon");
 			lat = po.getDouble("lat");
-			azimuth = po.getDouble("azimuth");
-			poi = new POI(id, name, info, 0, new LatLng(lat,lon),new LatLng(lat,lon), null);
+			imgId = po.getInt("imgId");
+			poi = new POI(pid, name, info, imgId, new LatLng(lat,lon),new LatLng(lat,lon), null);
 			ClimbXpertData.POIList.add(poi);
 		}
 		ClimbXpertData.pid = ClimbXpertData.POIList.size();

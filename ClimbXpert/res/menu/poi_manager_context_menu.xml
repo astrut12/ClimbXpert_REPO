@@ -6,7 +6,11 @@
         android:showAsAction="never"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="Delete"/>
-        
-        
+         <item
+        android:id="@+id/menuItemAddRoute"
+		android:orderInCategory="102"
+        android:showAsAction="never"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Add Route"/>        
 
 </menu>

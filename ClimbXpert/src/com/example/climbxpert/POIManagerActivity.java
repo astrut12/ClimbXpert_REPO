@@ -17,7 +17,8 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class POIManagerActivity extends Activity {
 	
-	private final int ADD_ITEM_RESULT = 1;
+	private final int ADD_POI_ITEM_RESULT = 1;
+	private final int ADD_ROUTE_ITEM_RESULT = 2;
 	private ListView listView; 
 	//private ArrayList<POI> arrayList;
 	private POIDAL _dal;
@@ -46,20 +47,33 @@ public class POIManagerActivity extends Activity {
 
 	protected void onActivityResult(int reqCode, int resCode, Intent data) { 
 			switch (reqCode) { 
-				case ADD_ITEM_RESULT: { 
+				case ADD_POI_ITEM_RESULT: { 
 					switch (resCode) {
 					case (RESULT_CANCELED) : {
 						return;
 					}
 					case (RESULT_OK) : {
 						LatLng ll = new LatLng(data.getDoubleExtra("lon", -1.0), data.getDoubleExtra("lat", -1.0));
-						_dal.insert(new POI(data.getIntExtra("pid", -1), data.getStringExtra("name"),data.getStringExtra("info"),0,ll,ll,null)); 
+						LatLng stlll = new LatLng(data.getDoubleExtra("STLlon", -1.0), data.getDoubleExtra("STLlat", -1.0));
+						_dal.insert(new POI(data.getIntExtra("pid", -1), data.getStringExtra("name"),
+								data.getStringExtra("info"),data.getIntExtra("imgId", -1),ll,stlll,null)); 
 						//_dal.insert(new POI((String)data.getStringExtra("title"),(Date)data.getSerializableExtra("dueDate")));
-						POIAdapter.add(new POI(data.getIntExtra("pid", -1), data.getStringExtra("name"),data.getStringExtra("info"),0,ll,ll,null));
+						POIAdapter.add(new POI(data.getIntExtra("pid", -1), data.getStringExtra("name"),
+								data.getStringExtra("info"),data.getIntExtra("imgId", -1),ll,stlll,null));
 						Log.d("POIManager","inserted intems");
 					}
 				}
-			} 
+			}
+				case ADD_ROUTE_ITEM_RESULT: {
+					switch (resCode) {
+					case (RESULT_CANCELED) : {
+						return;
+					}
+					case (RESULT_OK) : {
+						
+					}
+				}					
+			}
 		}
 	}
 	
@@ -74,7 +88,7 @@ public class POIManagerActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.menuItemAdd : {
 				Intent intent = new Intent(this,AddNewPOIActivity.class);  
-				startActivityForResult(intent, ADD_ITEM_RESULT); 
+				startActivityForResult(intent, ADD_POI_ITEM_RESULT); 
 				return true;
 			}
 			default : {
@@ -85,7 +99,7 @@ public class POIManagerActivity extends Activity {
 	
 	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo info) { 
 		super.onCreateContextMenu(menu, v, info); 
-		getMenuInflater().inflate(R.menu.context_menu, menu);
+		getMenuInflater().inflate(R.menu.poi_manager_context_menu, menu);
 		POI item = (POI)POIAdapter.getItem(((AdapterContextMenuInfo)info).position);
 		menu.setHeaderTitle(item.name);
 		menu.getItem(1).setTitle(item.name);
@@ -98,6 +112,12 @@ public class POIManagerActivity extends Activity {
 		 		_dal.delete((POI)POIAdapter.getItem((info.position)));
 		 		POIAdapter.remove(POIAdapter.getItem((info.position)));
 		 		return true;
+		 	}
+		 	case R.id.menuItemAddRoute: {
+		 		Intent intent = new Intent(this,AddNewRouteActivity.class);
+		 		intent.putExtra("pid",(POI)POIAdapter.getItem((info.position)));
+				startActivityForResult(intent, ADD_ROUTE_ITEM_RESULT); 
+				return true;
 		 	}
 		 	default: {
 		 		return false;

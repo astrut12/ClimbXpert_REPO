@@ -12,24 +12,27 @@ import android.widget.EditText;
 
 public class AddNewPOIActivity extends Activity {
  
-	private Button btnCancel, btnOK, btnBMP;
+	private Button btnCancel, btnOK;
 	private EditText name;
 	private EditText info;
 	private EditText lon;
 	private EditText lat;
-	private EditText azimuth;
+	private EditText imgId;
+	private EditText STLlon;
+	private EditText STLlat;
 	
 	public void onCreate(Bundle unused) { 
 		super.onCreate(unused); 
-		setContentView(R.layout.poi_info_layout);
+		setContentView(R.layout.add_poi_layout);
 		btnOK = (Button)findViewById(R.id.btnOK);
 		btnCancel = (Button)findViewById(R.id.btnCancel);
-		btnBMP = (Button)findViewById(R.id.btnImg);
+		imgId = (EditText)findViewById(R.id.image_id);
 		name = (EditText)findViewById(R.id.name);
 		info = (EditText)findViewById(R.id.info);
 		lon = (EditText)findViewById(R.id.lon);
 		lat = (EditText)findViewById(R.id.lat);
-		azimuth = (EditText)findViewById(R.id.azimuth);
+		STLlon = (EditText)findViewById(R.id.standLocLon);
+		STLlat = (EditText)findViewById(R.id.standLocLat);
 		
         Parse.initialize(this, "Mldts0UdI2e7ndjgYIzcAdFiIRKYRiOhYPrQWzqx", "nyRer8Q1FzdfD2oHp0IekZX4DLAeXXcXciVDgPAf");
 		
@@ -50,23 +53,17 @@ public class AddNewPOIActivity extends Activity {
 				result.putExtra("pid",ClimbXpertData.pid);
 				result.putExtra("name",name.getText().toString());
 				result.putExtra("info",info.getText().toString());
+				result.putExtra("imgId",Integer.parseInt(imgId.getText().toString()));
 				result.putExtra("lon",Double.parseDouble(lon.getText().toString()));
 				result.putExtra("lat",Double.parseDouble(lat.getText().toString()));
-				result.putExtra("azimuth",Double.parseDouble(azimuth.getText().toString()));
+				result.putExtra("STLlon",Double.parseDouble(STLlon.getText().toString()));
+				result.putExtra("STLlat",Double.parseDouble(STLlat.getText().toString()));
 				setResult(RESULT_OK, result); 
 				ClimbXpertData.pid++;
 				finish();
 			}
 		});
-		
-		btnBMP.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				 
-				//TODO: finish
-			}
-		});
-		
+				
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {

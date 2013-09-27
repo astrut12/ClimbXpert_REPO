@@ -45,7 +45,10 @@ public class POIDAL {
 			parseObject.put("name",POIItem.name);
 			parseObject.put("info",POIItem.info);
 			parseObject.put("lon",POIItem.carNavigation.longitude);
+			parseObject.put("STLlon",POIItem.standLocation.longitude);
+			parseObject.put("STLlat",POIItem.standLocation.latitude);
 			parseObject.put("lat",POIItem.carNavigation.latitude);
+			parseObject.put("imgId", POIItem.imageID);
 			//TODO: finish implementation
 			parseObject.saveInBackground();
 			Log.d("POIDAL","sent to parse");
