@@ -37,7 +37,7 @@ public class NavigateActivity extends Activity
 	
 	// Options for location requests
 	private static final LocationRequest REQUEST = LocationRequest.create()
-	            .setInterval(5000)         // 5 seconds
+	            .setInterval(1000)         // 5 seconds
 	            .setFastestInterval(16)    // 16ms = 60fps
 	            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
 	 			//TODO consider lowering the accuracy - this may affect performance
@@ -57,7 +57,7 @@ public class NavigateActivity extends Activity
 		magno = sensMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
 		//TODO this is an example location. should be replaced with actual data from POI
-		targetLocation = new LatLng(31.76297,35.202067);
+		targetLocation = new LatLng(31.762673,35.201756);
 		
 	}
 
@@ -91,7 +91,7 @@ public class NavigateActivity extends Activity
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
 		
-		LoggerTools.LogToast(this, "Accuracy changed for sensor: " + sensor + " to: " + accuracy);
+		LoggerTools.LogToastShort(this, "Accuracy changed for sensor: " + sensor + " to: " + accuracy);
 		
 	}
 
@@ -120,12 +120,14 @@ public class NavigateActivity extends Activity
 		float y = se.values[1];
 		
 		
-		double Dangle = MathOrientation.getAngle(x,y);
+		double Dangle = MathOrientation.normalizeAngle((float)MathOrientation.getAngle(x,y)-90);
 		
 		
-		zV.setText("Calculated Angle:" + Dangle);
+		float rotaionangle = compassOffset - locationOffset - (float)Dangle;
+		zV.setText("rotaion Angle:" + rotaionangle);
 		
-		img.setRotation(compassOffset - locationOffset - (float)Dangle);
+		
+		img.setRotation(rotaionangle);
 		
 	}
 
@@ -145,6 +147,11 @@ public class NavigateActivity extends Activity
 	@Override
 	public void onLocationChanged(Location location) {
 		lastKnownLocation = location;
+		
+		TextView tDistance = (TextView)findViewById(R.id.targetDistance);
+		
+		tDistance.setText("Distance:" + getDistanceToTarget());
+		
 	}
 
 	@Override
@@ -172,10 +179,10 @@ public class NavigateActivity extends Activity
 			
 		}
 		
-		//TODO check x, y matching (lat to x, lng to y?)
-		return (float) MathOrientation.getAngle(lastKnownLocation.getLatitude() - targetLocation.latitude,
-								lastKnownLocation.getLongitude() - targetLocation.longitude);
-		
+		// latitude is y axis, longitude is x axis
+		return (float) MathOrientation.normalizeAngle((float)
+				MathOrientation.getAngle(targetLocation.longitude - lastKnownLocation.getLongitude(),
+										targetLocation.latitude - lastKnownLocation.getLatitude())-90);
 	}
 	
 	

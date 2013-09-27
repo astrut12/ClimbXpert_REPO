@@ -50,4 +50,13 @@
         android:layout_marginBottom="34dp"
         android:text="target" />
 
+    <TextView
+        android:id="@+id/targetDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/arrowImage"
+        android:layout_alignLeft="@+id/arrowImage"
+        android:layout_marginBottom="14dp"
+        android:text="distance" />
+
 </RelativeLayout>
