@@ -61,6 +61,14 @@
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
+            android:name="com.example.climbxpert.AddNewPOIActivity"
+            android:label="@string/title_activity_new_POI" >
+        </activity>
+        <activity
+            android:name="com.example.climbxpert.POIManagerActivity"
+            android:label="@string/title_activity_new_POI" >
+        </activity>
+        <activity
             android:name="com.example.climbxpert.Camera"
             android:label="@string/title_activity_camera" >
         </activity>

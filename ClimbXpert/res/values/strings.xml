@@ -15,5 +15,6 @@
     <string name="title_activity_camera_view">CameraViewActivity</string>
     <string name="title_activity_camera">Camera</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_new_POI">POIActivity</string>
 
 </resources>

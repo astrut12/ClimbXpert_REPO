@@ -68,4 +68,13 @@
         android:onClick="openTestView"
         android:text="Test View" />
     
+     <Button
+        android:id="@+id/POIViewButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TestingViewButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:onClick="openPOIMenuView"
+        android:text="POI Menu" />
 </RelativeLayout>
