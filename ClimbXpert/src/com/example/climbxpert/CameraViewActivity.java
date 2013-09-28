@@ -11,11 +11,15 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 public class CameraViewActivity extends Activity
-			implements SensorEventListener{
+			implements SensorEventListener,
+			View.OnClickListener{
 
     private Camera mCamera;
     private CameraView mPreview;
@@ -46,6 +50,7 @@ public class CameraViewActivity extends Activity
 		
 		
         ClimbRoute firstRoute = new ClimbRoute();
+        firstRoute.rid = 1;
         firstRoute.azimuth = (float) 91;
         firstRoute.tilt = (float) 0;
         firstRoute.imageRscID = R.drawable.test;
@@ -53,9 +58,10 @@ public class CameraViewActivity extends Activity
         
         
         ClimbRoute secondRoute = new ClimbRoute();
-        secondRoute.azimuth = (float) 95;
+        secondRoute.rid = 2;
+        secondRoute.azimuth = (float) 105;
         secondRoute.tilt = (float) 0;
-        secondRoute.imageRscID = R.drawable.test;
+        secondRoute.imageRscID = R.drawable.test2;
         loadRoute(secondRoute);
 		
 		
@@ -231,9 +237,15 @@ public class CameraViewActivity extends Activity
 	 */
 	private void loadRoute(ClimbRoute route)
 	{
-		ImageView tmpView = new ImageView(this);
-        tmpView.setImageResource(route.imageRscID);
-        routeList.add(new RouteImageConnector(route, tmpView));
+		//TODO fix overlapping in clicks
+		ImageButton imgButton = new ImageButton(this);
+        imgButton.setImageResource(route.imageRscID);
+        imgButton.setBackground(null);
+        imgButton.setAdjustViewBounds(true);
+        imgButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imgButton.setTag(route.rid);
+        imgButton.setOnClickListener(this);
+        routeList.add(new RouteImageConnector(route, imgButton));
 	}
 	
 	
@@ -250,5 +262,13 @@ public class CameraViewActivity extends Activity
 			route = climbRoute;
 			imgView = imageView;
 		}
+	}
+
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		LoggerTools.LogToastShort(this, "Clicked Route: " + v.getTag());
+		
 	}
 }
