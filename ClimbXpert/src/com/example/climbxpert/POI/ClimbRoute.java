@@ -39,7 +39,7 @@ public class ClimbRoute {
 	public String info;
 	
 	// The route's ID
-	public int ID;
+	public int rid;
 	
 	// The route image resource ID
 	public int imageRscID;
