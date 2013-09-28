@@ -148,8 +148,10 @@ public class NavigateActivity extends Activity
 	public void onLocationChanged(Location location) {
 		lastKnownLocation = location;
 		
+		TextView tGeo = (TextView) findViewById(R.id.geoData);
 		TextView tDistance = (TextView)findViewById(R.id.targetDistance);
 		
+		tGeo.setText("Geo:" + location.getLatitude() + ", " + location.getLongitude());
 		tDistance.setText("Distance:" + getDistanceToTarget());
 		
 	}
@@ -183,6 +185,7 @@ public class NavigateActivity extends Activity
 		return (float) MathOrientation.normalizeAngle((float)
 				MathOrientation.getAngle(targetLocation.longitude - lastKnownLocation.getLongitude(),
 										targetLocation.latitude - lastKnownLocation.getLatitude())-90);
+
 	}
 	
 	

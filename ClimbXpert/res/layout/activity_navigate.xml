@@ -59,4 +59,12 @@
         android:layout_marginBottom="14dp"
         android:text="distance" />
 
+    <TextView
+        android:id="@+id/geoData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/targetOffset"
+        android:layout_alignLeft="@+id/arrowImage"
+        android:text="geo" />
+
 </RelativeLayout>
