@@ -212,8 +212,8 @@ public class CameraViewActivity extends Activity
 	private void positionBitmaps()
 	{
 		//TODO calculate the proper scaling for vertical alignment
-		int verticalScale = 25;
-		int horizontalScale = 25;
+		int verticalScale = 18;
+		int horizontalScale = 18;
 		
 		
 		for (RouteImageConnector po : routeList)

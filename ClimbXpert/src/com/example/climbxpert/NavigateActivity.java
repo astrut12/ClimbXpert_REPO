@@ -16,7 +16,10 @@ import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -66,7 +69,7 @@ public class NavigateActivity extends Activity
 		magno = sensMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
 		//TODO this is an example location. should be replaced with actual data from POI
-		targetLocation = new LatLng(31.761396,35.199674);
+		targetLocation = new LatLng(31.762641,35.201756);
 		
 	}
 
@@ -242,15 +245,25 @@ public class NavigateActivity extends Activity
 	 *  Hide the Camera View button.
 	 */
 	private void disableCamraViewButton() {
-		// TODO Auto-generated method stub
+		Button cvb = (Button) findViewById(R.id.CameraViewButton);
 		
+		cvb.setVisibility(View.INVISIBLE);
 	}
 	
 	/**
 	 * Display the Camera View button and make it clickable
 	 */
 	private void enableCameraViewButton() {
-		// TODO Auto-generated method stub
+		Button cvb = (Button) findViewById(R.id.CameraViewButton);
 		
+		cvb.setVisibility(View.VISIBLE);
 	}
+	
+	
+	public void openCameraView(View view)
+    {
+    	Intent intent = new Intent(this, CameraViewActivity.class);
+    	//TODO add POI info in the intent
+    	startActivity(intent);
+    }
 }
