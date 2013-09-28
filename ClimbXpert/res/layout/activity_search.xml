@@ -1,35 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".NavigateActivity" >
-
-    <TextView
-        android:layout_width="wrap_content"
+    android:orientation="vertical"
+    tools:context=".SearchActivity" >
+ 
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-</RelativeLayout>
--->
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal" >
+ 
+        <Button
+            android:id="@+id/btn_find"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_btn_find"
+            android:layout_alignParentRight="true" />
+ 
+        <EditText
+            android:id="@+id/et_location"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="@string/hnt_et_location"
+            android:layout_toLeftOf="@id/btn_find" />
+ 
+    </RelativeLayout>
+ 
+<fragment 
 			android:id="@+id/map"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:name="com.google.android.gms.maps.MapFragment"
 			class="com.google.android.gms.maps.SupportMapFragment"/>
-
-
-<!--  <com.google.android.maps.MapView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mapview"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:clickable="true"
-    android:apiKey="API_KEY"
-/>
--->
+ 
+</LinearLayout>

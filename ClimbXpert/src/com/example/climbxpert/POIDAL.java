@@ -41,7 +41,7 @@ public class POIDAL {
 		ParseObject parseObject = new ParseObject("POI");
 		Log.d("POIDAL","in insert");
 		try {	
-			parseObject.put("pid",String.valueOf(POIItem.pid));
+			parseObject.put("pid",POIItem.pid);
 			parseObject.put("name",POIItem.name);
 			parseObject.put("info",POIItem.info);
 			parseObject.put("lon",POIItem.carNavigation.longitude);
@@ -83,14 +83,9 @@ public class POIDAL {
 		try
 		{
 			ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("POI");
-			query.whereEqualTo("id", POIItem.pid);
+			Log.d("POIDAL", "pid is"+ String.valueOf(POIItem.pid));
+			query.whereEqualTo("pid", POIItem.pid);
 			query.findInBackground(new FindCallback() {
-				
-
-				void internalDone(Object arg0, ParseException arg1) {
-					// TODO Auto-generated method stub
-					
-				}
 				public void done(List results, ParseException e) {
 					if (e != null) {
 			        	//error
@@ -101,8 +96,10 @@ public class POIDAL {
 			        			((ParseObject)results.get(0)).delete();
 			        		} 
 			        		catch (ParseException e1) {
-						
-			        		}	
+			        			Log.d("POIDAL", "Failed to delete from Parse");
+			        	
+			        		}
+			        		Log.d("POIDAL", "delete successfully from Parse");
 			        	}
 			        }
 				}

@@ -1,6 +1,5 @@
 package com.example.climbxpert;
 
-import com.example.climbxpert.POI.ClimbRoute.ROUTE_LEVEL;
 import com.parse.Parse;
 
 import android.app.Activity;
@@ -19,10 +18,15 @@ public class AddNewRouteActivity extends Activity {
 	private EditText tilt;
 	private EditText imgId;
 	private EditText azimuth;
+	private int pid;
 	
 	public void onCreate(Bundle unused) { 
 		super.onCreate(unused); 
-		setContentView(R.layout.add_poi_layout);
+		
+		Intent intent = getIntent();
+		
+		pid = intent.getIntExtra("pid",-1);
+		setContentView(R.layout.add_route_layout);
 		route_btnOK = (Button)findViewById(R.id.route_btnOK);
 		route_btnCancel = (Button)findViewById(R.id.route_btnCancel);
 		imgId = (EditText)findViewById(R.id.route_image);
@@ -43,13 +47,14 @@ public class AddNewRouteActivity extends Activity {
 					setResult(RESULT_CANCELED); 
 					finish();
 				}
-				 
-				Intent result = new Intent();
+			
+				Intent result = new Intent();	
 				result.putExtra("route_name",name.getText().toString());
 				result.putExtra("route_info",info.getText().toString());
-				result.putExtra("route_image",imgId.getText().toString());
+				result.putExtra("route_image",Integer.parseInt(imgId.getText().toString()));
 				result.putExtra("route_tilt",Double.parseDouble(tilt.getText().toString()));
 				result.putExtra("route_azimuth",Double.parseDouble(azimuth.getText().toString()));
+				result.putExtra("pid", pid);
 				setResult(RESULT_OK, result); 
 				finish();
 			}

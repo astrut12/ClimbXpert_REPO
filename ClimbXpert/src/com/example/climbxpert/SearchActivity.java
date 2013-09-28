@@ -17,11 +17,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.location.Location;
+import java.io.IOException;
+import java.util.List;
+ 
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import android.location.Location;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,7 +48,11 @@ public class SearchActivity extends FragmentActivity
 {
 
 	// A map element to refer to the map fragment
-	private GoogleMap map;
+	private GoogleMap googleMap;
+	
+	MarkerOptions markerOptions;
+	
+	LatLng latLng;
 	
 	// Client for connecting to location service
 	private LocationClient locClient;
@@ -57,6 +72,35 @@ public class SearchActivity extends FragmentActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);	
+		
+		 SupportMapFragment supportMapFragment = (SupportMapFragment)
+			        getSupportFragmentManager().findFragmentById(R.id.map);
+			 
+			        // Getting a reference to the map
+			        googleMap = supportMapFragment.getMap();
+			 
+			        // Getting reference to btn_find of the layout activity_main
+			        Button btn_find = (Button) findViewById(R.id.btn_find);
+			 
+			        // Defining button click event listener for the find button
+			        OnClickListener findClickListener = new OnClickListener() {
+			            @Override
+			            public void onClick(View v) {
+			                // Getting reference to EditText to get the user input location
+			                EditText etLocation = (EditText) findViewById(R.id.et_location);
+			 
+			                // Getting user input location
+			                String location = etLocation.getText().toString();
+			 
+			                if(location!=null && !location.equals("")){
+			                    new GeocoderTask().execute(location);
+			                }
+			            }
+			        };
+			 
+			        // Setting button click event listener for the find button
+			        btn_find.setOnClickListener(findClickListener);
+			 
 		
 		//TODO check what else needs to be initialized in this point
 	}
@@ -94,23 +138,23 @@ public class SearchActivity extends FragmentActivity
 	 */
 	public void setupMap()
 	{
-		if (null == map)
+		if (null == googleMap)
 		{
-			map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+			googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 			
-			if (null != map)
+			if (null != googleMap)
 			{
-				map.setMyLocationEnabled(true);
+				googleMap.setMyLocationEnabled(true);
 				
-				map.setOnMyLocationButtonClickListener(this);
+				googleMap.setOnMyLocationButtonClickListener(this);
 				
-				map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+				googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 				
 				//replacing the default marker info window 
-				map.setInfoWindowAdapter(new POIInfoWindowAdapter());
+				googleMap.setInfoWindowAdapter(new POIInfoWindowAdapter());
 				
 				//setting listener for infoWindow clicks
-				map.setOnInfoWindowClickListener(this);
+				googleMap.setOnInfoWindowClickListener(this);
 				
 				//initializing a set of markers for the map.
 				insertMarkers();
@@ -209,15 +253,15 @@ public class SearchActivity extends FragmentActivity
 		//TODO consider passing the POI ID within the Marker Snippet attribute.
 		
 		
-		map.addMarker(new MarkerOptions()
+		googleMap.addMarker(new MarkerOptions()
 					.position(new LatLng(31.762, 35.201))
 					.title("test1"));
 		
-		map.addMarker(new MarkerOptions()
+		googleMap.addMarker(new MarkerOptions()
 					.position(new LatLng(31.764, 35.204))
 					.title("test2"));
 		
-		map.addMarker(new MarkerOptions()
+		googleMap.addMarker(new MarkerOptions()
 					.position(new LatLng(31.762, 35.203))
 					.title("test3"));
 	}
@@ -246,9 +290,9 @@ public class SearchActivity extends FragmentActivity
 	 */
 	private void MoveToLocation(LatLng latlng)
 	{
-		if (null != latlng && null != map)
+		if (null != latlng && null != googleMap)
 		{	
-			map.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+			googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
 			.target(latlng)
 	        .zoom(15.5f)
 	        .bearing(300)//TODO: need to check the compass direction and insert it into the bearing
@@ -314,7 +358,60 @@ public class SearchActivity extends FragmentActivity
 		}
 
 	}
-
+	
+	/*************************************/
+	// An AsyncTask class for accessing the GeoCoding Web Service
+    private class GeocoderTask extends AsyncTask<String, Void, List<Address>>{
+ 
+        @Override
+        protected List<Address> doInBackground(String... locationName) {
+            // Creating an instance of Geocoder class
+            Geocoder geocoder = new Geocoder(getBaseContext());
+            List<Address> addresses = null;
+ 
+            try {
+                // Getting a maximum of 3 Address that matches the input text
+                addresses = geocoder.getFromLocationName(locationName[0], 3);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return addresses;
+        }
+ 
+        @Override
+        protected void onPostExecute(List<Address> addresses) {
+ 
+            if(addresses==null || addresses.size()==0){
+                Toast.makeText(getBaseContext(), "No Location found", Toast.LENGTH_SHORT).show();
+            }
+ 
+            // Clears all the existing markers on the map
+            googleMap.clear();
+ 
+            // Adding Markers on Google Map for each matching address
+            for(int i=0;i<addresses.size();i++){
+ 
+                Address address = (Address) addresses.get(i);
+ 
+                // Creating an instance of GeoPoint, to display in Google Map
+                latLng = new LatLng(address.getLatitude(), address.getLongitude());
+ 
+                String addressText = String.format("%s, %s",
+                address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
+                address.getCountryName());
+ 
+                markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title(addressText);
+ 
+                googleMap.addMarker(markerOptions);
+ 
+                // Locate the first location
+                if(i==0)
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            }
+        }
+    }
 
 	
 }

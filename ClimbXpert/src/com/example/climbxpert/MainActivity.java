@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 
 	private void getPOIfromServer() throws ParseException {
 		
-		double lon,lat;
+		double lon,lat,stllon,stllat;
 		int pid,imgId;
 		String name,info;
 		POI poi;
@@ -61,8 +61,13 @@ public class MainActivity extends Activity {
 			info = po.getString("info");
 			lon = po.getDouble("lon");
 			lat = po.getDouble("lat");
+			stllon = po.getDouble("STLlon");
+			stllat = po.getDouble("STLlat");
 			imgId = po.getInt("imgId");
-			poi = new POI(pid, name, info, imgId, new LatLng(lat,lon),new LatLng(lat,lon), null);
+			poi = new POI(pid, name, info, imgId, new LatLng(lat,lon),new LatLng(stllat,stllon), null);
+			Log.d("POIDAL", "pid "+String.valueOf(pid));
+			Log.d("POIDAL", "name "+String.valueOf(name));
+			Log.d("POIDAL", "lon "+String.valueOf(lon));
 			ClimbXpertData.POIList.add(poi);
 		}
 		ClimbXpertData.pid = ClimbXpertData.POIList.size();

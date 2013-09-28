@@ -3,6 +3,8 @@ package com.example.climbxpert;
 import com.example.climbxpert.POI.POI;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.Parse;
+import com.parse.ParseObject;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -28,7 +30,6 @@ public class POIManagerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_poi_manager);
-		Intent intent= getIntent();
 		_dal = new POIDAL(this);
 		//ClimbXpertData.POIList = intent.getParcelableArrayListExtra("poi");
 		//arrayList = _dal.all();
@@ -63,6 +64,7 @@ public class POIManagerActivity extends Activity {
 						Log.d("POIManager","inserted intems");
 					}
 				}
+					break;
 			}
 				case ADD_ROUTE_ITEM_RESULT: {
 					switch (resCode) {
@@ -70,9 +72,19 @@ public class POIManagerActivity extends Activity {
 						return;
 					}
 					case (RESULT_OK) : {
+						ParseObject parseObject = new ParseObject("Route");
+						parseObject.put("name", data.getStringExtra("route_name"));
+						parseObject.put("info", data.getStringExtra("route_info"));
+						parseObject.put("imgId", data.getIntExtra("route_image", -1));
+						parseObject.put("azimuth", data.getDoubleExtra("route_azimuth",-1));
+						parseObject.put("tilt", data.getDoubleExtra("route_tilt",-1));
+						parseObject.put("pid", data.getIntExtra("pid", -1));
+						parseObject.saveInBackground();
+						Log.d("Route","sent to parse");
 						
 					}
-				}					
+				}			
+				break;
 			}
 		}
 	}
@@ -102,7 +114,6 @@ public class POIManagerActivity extends Activity {
 		getMenuInflater().inflate(R.menu.poi_manager_context_menu, menu);
 		POI item = (POI)POIAdapter.getItem(((AdapterContextMenuInfo)info).position);
 		menu.setHeaderTitle(item.name);
-		menu.getItem(1).setTitle(item.name);
 	}
 
 	public boolean onContextItemSelected(MenuItem item) { 
@@ -111,11 +122,12 @@ public class POIManagerActivity extends Activity {
 		 	case R.id.menuItemDelete: {
 		 		_dal.delete((POI)POIAdapter.getItem((info.position)));
 		 		POIAdapter.remove(POIAdapter.getItem((info.position)));
+		 		ClimbXpertData.pid--;
 		 		return true;
 		 	}
 		 	case R.id.menuItemAddRoute: {
 		 		Intent intent = new Intent(this,AddNewRouteActivity.class);
-		 		intent.putExtra("pid",(POI)POIAdapter.getItem((info.position)));
+		 		intent.putExtra("pid",((POI)POIAdapter.getItem(info.position)).pid);
 				startActivityForResult(intent, ADD_ROUTE_ITEM_RESULT); 
 				return true;
 		 	}
