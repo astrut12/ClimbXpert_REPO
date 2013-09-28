@@ -47,6 +47,15 @@ public class NavigateActivity extends Activity
 	
 	private LatLng targetLocation;
 	
+	
+	private final double EARTH_RADIUS = 6371000;
+	
+	// Adjusts the scaling of distance calculations
+	private final double SCALE_FOR_REAL_DISTANCE_CALCULATION = 0.016434811;
+	
+	// The minimum distance in meters to enable camera view button
+	private final double MINIMUM_DISTANCE_TO_TARGET = 5.0;
+	
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +66,7 @@ public class NavigateActivity extends Activity
 		magno = sensMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
 		//TODO this is an example location. should be replaced with actual data from POI
-		targetLocation = new LatLng(31.762673,35.201756);
+		targetLocation = new LatLng(31.761396,35.199674);
 		
 	}
 
@@ -89,20 +98,16 @@ public class NavigateActivity extends Activity
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-		
-		LoggerTools.LogToastShort(this, "Accuracy changed for sensor: " + sensor + " to: " + accuracy);
-		
+		// Do nothing
 	}
 
+	/**
+	 * Updates the direction of the compass' arrow in relation to given magnetic
+	 * data and last known location. 
+	 */
 	@Override
 	public void onSensorChanged(SensorEvent se) {
-		
-		//TODO:	1. get the current location (add a listener for location and store last known location for reference).
-		//		2. x,y coordinates from current location and compared to target
-		//		3. use calculated coordinates to set the compass direction with deviation to the actual magnetic field
-		
-		
+
 		ImageView img = (ImageView)findViewById(R.id.arrowImage);
 		TextView xV = (TextView)findViewById(R.id.xValue);
 		TextView yV = (TextView)findViewById(R.id.yValue);
@@ -144,17 +149,35 @@ public class NavigateActivity extends Activity
 	}
 	
 	
+	/**
+	 * Updates the last known location and update distance calculations.
+	 * Triggers Camera View button if close enough.
+	 */
 	@Override
 	public void onLocationChanged(Location location) {
 		lastKnownLocation = location;
 		
-		TextView tGeo = (TextView) findViewById(R.id.geoData);
-		TextView tDistance = (TextView)findViewById(R.id.targetDistance);
+		double distance = getDistanceToTarget();
 		
+		// show the user the remaining distance
+		TextView tDistance = (TextView)findViewById(R.id.targetDistance);
+		tDistance.setText("Distance:" + distance);
+		
+		//TODO consider if Geo information is relevant for users
+		TextView tGeo = (TextView) findViewById(R.id.geoData);
 		tGeo.setText("Geo:" + location.getLatitude() + ", " + location.getLongitude());
-		tDistance.setText("Distance:" + getDistanceToTarget());
+		
+		if (distance < MINIMUM_DISTANCE_TO_TARGET)
+		{
+			enableCameraViewButton();
+		}
+		else
+		{
+			disableCamraViewButton();
+		}
 		
 	}
+
 
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
@@ -172,6 +195,10 @@ public class NavigateActivity extends Activity
 	}
 	
 	
+	/**
+	 * Calculates the angle from the last known location to the target location 
+	 * @return The angle degrees, normalized.
+	 */
 	private float getAngleToLocation()
 	{
 		
@@ -189,6 +216,12 @@ public class NavigateActivity extends Activity
 	}
 	
 	
+	/**
+	 * Calculates the distance from the last known location to the target location.
+	 * This is done with approximation with the assumption that the distance between 
+	 * the two locations is negligible comparing to earth radius.  
+	 * @return The distance in meters
+	 */
 	private double getDistanceToTarget()
 	{
 		if (null == lastKnownLocation)
@@ -196,14 +229,28 @@ public class NavigateActivity extends Activity
 			return -1;
 		}
 		
-		double x = lastKnownLocation.getLatitude() - targetLocation.latitude;
-		double y = lastKnownLocation.getLongitude() - targetLocation.longitude;
 		
-		//TODO add some scaling for the distance
+		double x = (lastKnownLocation.getLatitude() - targetLocation.latitude) * EARTH_RADIUS;
+		double y = (lastKnownLocation.getLongitude() - targetLocation.longitude) * EARTH_RADIUS;
 		
-		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) * SCALE_FOR_REAL_DISTANCE_CALCULATION;
 		
 	}
 	
 
+	/**
+	 *  Hide the Camera View button.
+	 */
+	private void disableCamraViewButton() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * Display the Camera View button and make it clickable
+	 */
+	private void enableCameraViewButton() {
+		// TODO Auto-generated method stub
+		
+	}
 }
