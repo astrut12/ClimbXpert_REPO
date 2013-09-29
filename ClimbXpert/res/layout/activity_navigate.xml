@@ -50,4 +50,31 @@
         android:layout_marginBottom="34dp"
         android:text="target" />
 
+    <TextView
+        android:id="@+id/targetDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/arrowImage"
+        android:layout_alignLeft="@+id/arrowImage"
+        android:layout_marginBottom="14dp"
+        android:text="distance" />
+
+    <TextView
+        android:id="@+id/geoData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/targetOffset"
+        android:layout_alignLeft="@+id/arrowImage"
+        android:text="geo" />
+
+    <Button
+        android:id="@+id/CameraViewButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="See Routes"
+        android:onClick="openCameraView"
+        android:visibility="invisible" />
+
 </RelativeLayout>

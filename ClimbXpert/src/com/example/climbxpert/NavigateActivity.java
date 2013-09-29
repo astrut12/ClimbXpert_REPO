@@ -16,7 +16,10 @@ import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,7 +40,7 @@ public class NavigateActivity extends Activity
 	
 	// Options for location requests
 	private static final LocationRequest REQUEST = LocationRequest.create()
-	            .setInterval(5000)         // 5 seconds
+	            .setInterval(1000)         // 5 seconds
 	            .setFastestInterval(16)    // 16ms = 60fps
 	            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
 	 			//TODO consider lowering the accuracy - this may affect performance
@@ -46,6 +49,15 @@ public class NavigateActivity extends Activity
 	private Location lastKnownLocation;
 	
 	private LatLng targetLocation;
+	
+	
+	private final double EARTH_RADIUS = 6371000;
+	
+	// Adjusts the scaling of distance calculations
+	private final double SCALE_FOR_REAL_DISTANCE_CALCULATION = 0.016434811;
+	
+	// The minimum distance in meters to enable camera view button
+	private final double MINIMUM_DISTANCE_TO_TARGET = 5.0;
 	
 		
 	@Override
@@ -57,7 +69,7 @@ public class NavigateActivity extends Activity
 		magno = sensMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
 		//TODO this is an example location. should be replaced with actual data from POI
-		targetLocation = new LatLng(31.76297,35.202067);
+		targetLocation = new LatLng(31.762641,35.201756);
 		
 	}
 
@@ -89,20 +101,16 @@ public class NavigateActivity extends Activity
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-		
-		LoggerTools.LogToast(this, "Accuracy changed for sensor: " + sensor + " to: " + accuracy);
-		
+		// Do nothing
 	}
 
+	/**
+	 * Updates the direction of the compass' arrow in relation to given magnetic
+	 * data and last known location. 
+	 */
 	@Override
 	public void onSensorChanged(SensorEvent se) {
-		
-		//TODO:	1. get the current location (add a listener for location and store last known location for reference).
-		//		2. x,y coordinates from current location and compared to target
-		//		3. use calculated coordinates to set the compass direction with deviation to the actual magnetic field
-		
-		
+
 		ImageView img = (ImageView)findViewById(R.id.arrowImage);
 		TextView xV = (TextView)findViewById(R.id.xValue);
 		TextView yV = (TextView)findViewById(R.id.yValue);
@@ -120,12 +128,14 @@ public class NavigateActivity extends Activity
 		float y = se.values[1];
 		
 		
-		double Dangle = MathOrientation.getAngle(x,y);
+		double Dangle = MathOrientation.normalizeAngle((float)MathOrientation.getAngle(x,y)-90);
 		
 		
-		zV.setText("Calculated Angle:" + Dangle);
+		float rotaionangle = compassOffset - locationOffset - (float)Dangle;
+		zV.setText("rotaion Angle:" + rotaionangle);
 		
-		img.setRotation(compassOffset - locationOffset - (float)Dangle);
+		
+		img.setRotation(rotaionangle);
 		
 	}
 
@@ -142,10 +152,35 @@ public class NavigateActivity extends Activity
 	}
 	
 	
+	/**
+	 * Updates the last known location and update distance calculations.
+	 * Triggers Camera View button if close enough.
+	 */
 	@Override
 	public void onLocationChanged(Location location) {
 		lastKnownLocation = location;
+		
+		double distance = getDistanceToTarget();
+		
+		// show the user the remaining distance
+		TextView tDistance = (TextView)findViewById(R.id.targetDistance);
+		tDistance.setText("Distance:" + distance);
+		
+		//TODO consider if Geo information is relevant for users
+		TextView tGeo = (TextView) findViewById(R.id.geoData);
+		tGeo.setText("Geo:" + location.getLatitude() + ", " + location.getLongitude());
+		
+		if (distance < MINIMUM_DISTANCE_TO_TARGET)
+		{
+			enableCameraViewButton();
+		}
+		else
+		{
+			disableCamraViewButton();
+		}
+		
 	}
+
 
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
@@ -163,6 +198,10 @@ public class NavigateActivity extends Activity
 	}
 	
 	
+	/**
+	 * Calculates the angle from the last known location to the target location 
+	 * @return The angle degrees, normalized.
+	 */
 	private float getAngleToLocation()
 	{
 		
@@ -172,13 +211,20 @@ public class NavigateActivity extends Activity
 			
 		}
 		
-		//TODO check x, y matching (lat to x, lng to y?)
-		return (float) MathOrientation.getAngle(lastKnownLocation.getLatitude() - targetLocation.latitude,
-								lastKnownLocation.getLongitude() - targetLocation.longitude);
-		
+		// latitude is y axis, longitude is x axis
+		return (float) MathOrientation.normalizeAngle((float)
+				MathOrientation.getAngle(targetLocation.longitude - lastKnownLocation.getLongitude(),
+										targetLocation.latitude - lastKnownLocation.getLatitude())-90);
+
 	}
 	
 	
+	/**
+	 * Calculates the distance from the last known location to the target location.
+	 * This is done with approximation with the assumption that the distance between 
+	 * the two locations is negligible comparing to earth radius.  
+	 * @return The distance in meters
+	 */
 	private double getDistanceToTarget()
 	{
 		if (null == lastKnownLocation)
@@ -186,14 +232,38 @@ public class NavigateActivity extends Activity
 			return -1;
 		}
 		
-		double x = lastKnownLocation.getLatitude() - targetLocation.latitude;
-		double y = lastKnownLocation.getLongitude() - targetLocation.longitude;
 		
-		//TODO add some scaling for the distance
+		double x = (lastKnownLocation.getLatitude() - targetLocation.latitude) * EARTH_RADIUS;
+		double y = (lastKnownLocation.getLongitude() - targetLocation.longitude) * EARTH_RADIUS;
 		
-		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) * SCALE_FOR_REAL_DISTANCE_CALCULATION;
 		
 	}
 	
 
+	/**
+	 *  Hide the Camera View button.
+	 */
+	private void disableCamraViewButton() {
+		Button cvb = (Button) findViewById(R.id.CameraViewButton);
+		
+		cvb.setVisibility(View.INVISIBLE);
+	}
+	
+	/**
+	 * Display the Camera View button and make it clickable
+	 */
+	private void enableCameraViewButton() {
+		Button cvb = (Button) findViewById(R.id.CameraViewButton);
+		
+		cvb.setVisibility(View.VISIBLE);
+	}
+	
+	
+	public void openCameraView(View view)
+    {
+    	Intent intent = new Intent(this, CameraViewActivity.class);
+    	//TODO add POI info in the intent
+    	startActivity(intent);
+    }
 }
