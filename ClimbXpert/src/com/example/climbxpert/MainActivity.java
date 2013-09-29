@@ -21,7 +21,7 @@ import com.parse.ParseQuery;
 
 public class MainActivity extends Activity {
 	
-	boolean debug = false;
+	boolean debug = true;
 	
 	POI currPoi;
 	private ArrayList<POI> arrayList;
