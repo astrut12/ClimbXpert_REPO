@@ -45,7 +45,6 @@ public class ClimbRoute {
 	
 	public int getImageId(Context context) {
 		String str = "p"+String.valueOf(parentPOIid)+"r"+String.valueOf(rid);
-		LoggerTools.LogToast(context, "looking for: " + str);
 		return context.getResources().getIdentifier(str, "drawable", "com.example.climbxpert");
 	}
 	
