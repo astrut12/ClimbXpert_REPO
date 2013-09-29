@@ -73,37 +73,7 @@ public class SearchActivity extends FragmentActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);	
-		
-		 SupportMapFragment supportMapFragment = (SupportMapFragment)
-			        getSupportFragmentManager().findFragmentById(R.id.map);
-			 
-			        // Getting a reference to the map
-			        googleMap = supportMapFragment.getMap();
-			 
-			        // Getting reference to btn_find of the layout activity_main
-			        Button btn_find = (Button) findViewById(R.id.btn_find);
-			 
-			        // Defining button click event listener for the find button
-			        OnClickListener findClickListener = new OnClickListener() {
-			            @Override
-			            public void onClick(View v) {
-			                // Getting reference to EditText to get the user input location
-			                EditText etLocation = (EditText) findViewById(R.id.et_location);
-			 
-			                // Getting user input location
-			                String location = etLocation.getText().toString();
-			 
-			                if(location!=null && !location.equals("")){
-			                    new GeocoderTask().execute(location);
-			                }
-			            }
-			        };
-			 
-			        // Setting button click event listener for the find button
-			        btn_find.setOnClickListener(findClickListener);
-			 
-		
-		//TODO check what else needs to be initialized in this point
+
 	}
 
 	
@@ -141,10 +111,38 @@ public class SearchActivity extends FragmentActivity
 	{
 		if (null == googleMap)
 		{
-			googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-			
+
+			SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+			// Getting a reference to the map
+			googleMap = supportMapFragment.getMap();
+
+		
 			if (null != googleMap)
 			{
+				// Getting reference to btn_find of the layout activity_main
+				Button btn_find = (Button) findViewById(R.id.btn_find);
+
+				// Defining button click event listener for the find button
+				OnClickListener findClickListener = new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// Getting reference to EditText to get the user input location
+						EditText etLocation = (EditText) findViewById(R.id.et_location);
+
+						// Getting user input location
+						String location = etLocation.getText().toString();
+
+						if(location!=null && !location.equals("")){
+							new GeocoderTask().execute(location);
+						}
+					}
+				};
+
+				// Setting button click event listener for the find button
+				btn_find.setOnClickListener(findClickListener);
+
+
+				//TODO check what else needs to be initialized in this point
 				
 				googleMap.setMyLocationEnabled(true);
 				
