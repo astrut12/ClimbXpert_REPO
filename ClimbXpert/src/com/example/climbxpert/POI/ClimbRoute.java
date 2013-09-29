@@ -2,6 +2,7 @@ package com.example.climbxpert.POI;
 
 import android.content.Context;
 
+import com.example.climbxpert.LoggerTools;
 import com.example.climbxpert.MathOrientation;
 import com.example.climbxpert.R;
 
@@ -43,7 +44,9 @@ public class ClimbRoute {
 	}
 	
 	public int getImageId(Context context) {
-		return context.getResources().getIdentifier("p"+String.valueOf(parentPOIid)+"r"+String.valueOf(rid), null, null);
+		String str = "p"+String.valueOf(parentPOIid)+"r"+String.valueOf(rid);
+		LoggerTools.LogToast(context, "looking for: " + str);
+		return context.getResources().getIdentifier(str, "drawable", "com.example.climbxpert");
 	}
 	
 	public float getTiltDifference(float compareTilt)
