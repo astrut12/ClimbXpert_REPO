@@ -27,6 +27,8 @@ LocationListener //listen to location changes
 	
 	// Client for connecting to location service
 	private LocationClient locClient;
+	
+	private static final double MINIMUM_DISTANCE = 500.0;
 
 	// Options for location requests
 	private static final LocationRequest REQUEST = LocationRequest.create()
@@ -87,35 +89,38 @@ LocationListener //listen to location changes
 		for (POI poi : ClimbXpertData.POIList)
 		{
 			double currDistance = MathOrientation.calculateLocationsDistance(currentLocation, poi.standLocation);
-			if (null == closestPOI)
+			if (currDistance < MINIMUM_DISTANCE)
 			{
-				closestPOI = poi;
-				closestDistance = currDistance;
-			}
-			else
-			{
-				if (currDistance < closestDistance)
+				if (null == closestPOI)
 				{
 					closestPOI = poi;
 					closestDistance = currDistance;
 				}
-			}
-
-			if (null != closestPOI)
-			{
-				if (!NavigateOpened)
+				else
 				{
-					NavigateOpened = true;
-					Intent intent = new Intent(this, NavigateActivity.class);
-					intent.putExtra("pid", closestPOI.pid);
-					startActivityForResult(intent, RETURN_RESULT_NAVIGATE_ACTIVITY);
+					if (currDistance < closestDistance)
+					{
+						closestPOI = poi;
+						closestDistance = currDistance;
+					}
 				}
 			}
-			else
+		}
+		if (null != closestPOI)
+		{
+			if (!NavigateOpened)
 			{
-				LoggerTools.LogToast(this, "No routes found nearby");
+				NavigateOpened = true;
+				Intent intent = new Intent(this, NavigateActivity.class);
+				intent.putExtra("pid", closestPOI.pid);
+				startActivityForResult(intent, RETURN_RESULT_NAVIGATE_ACTIVITY);
 			}
 		}
+		else
+		{
+			LoggerTools.LogToast(this, "No routes found nearby");
+		}
+
 	}
 
 	protected void onActivityResult(int reqCode, int resCode, Intent data) { 
