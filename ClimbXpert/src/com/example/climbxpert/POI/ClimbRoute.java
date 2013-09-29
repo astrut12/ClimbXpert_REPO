@@ -26,16 +26,16 @@ public class ClimbRoute {
 	// The tilt controls the gravity orientation (0 for horizontal)
 	public float tilt;
 	
-	public String imageName;
+	public int containingPOIid;
 	
-	public ClimbRoute(String r_name, String r_info,String r_rank, int r_id, float r_azimuth, float r_tilt, String r_imageName) {
+	public ClimbRoute(String r_name, String r_info,String r_rank, int r_id, float r_azimuth, float r_tilt, int r_pid) {
 		rank = r_rank;
 		name = r_name;
 		info = r_info;
 		rid = r_id;
 		azimuth = r_azimuth;
 		tilt = r_tilt;
-		imageName = r_imageName;
+		containingPOIid = r_pid;
 	}
 	
 	public ClimbRoute() {
@@ -43,7 +43,7 @@ public class ClimbRoute {
 	}
 	
 	public int getImageId(Context context) {
-		return context.getResources().getIdentifier(imageName, null, null);
+		return context.getResources().getIdentifier("p" + String.valueOf(containingPOIid) + "r" + String.valueOf(rid), null, null);
 	}
 	
 	public float getTiltDifference(float compareTilt)
