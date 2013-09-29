@@ -324,7 +324,7 @@ public class SearchActivity extends FragmentActivity
 
 								poi.routes = new ArrayList<ClimbRoute>();
 								for(ParseObject po : (List<ParseObject>)results) {
-									poi.routes.add(new ClimbRoute(po.getString("name"),po.getString("info"),po.getString("rank"),ClimbXpertData.rid,(float)po.getDouble("azimuth"),(float)po.getDouble("tilt")));
+									poi.routes.add(new ClimbRoute(po.getString("name"),po.getString("info"),po.getString("rank"),ClimbXpertData.rid,(float)po.getDouble("azimuth"),(float)po.getDouble("tilt"), poi.pid));
 								}
 							}
 						}
