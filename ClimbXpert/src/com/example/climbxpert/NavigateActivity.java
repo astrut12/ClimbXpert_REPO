@@ -1,5 +1,6 @@
 package com.example.climbxpert;
 
+import com.example.climbxpert.POI.POI;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
@@ -68,9 +69,15 @@ public class NavigateActivity extends Activity
 		sensMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		magno = sensMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
-		//TODO this is an example location. should be replaced with actual data from POI
-		targetLocation = new LatLng(31.762641,35.201756);
+		//TODO maybe -1 is not invalid id
+//		defaultTargetLocation = new LatLng(31.762641,35.201756);
+		int recievedPID = this.getIntent().getIntExtra("pid", -1);
+		POI targetPOI = ClimbXpertData.getPOI(recievedPID);
+		if (recievedPID < 0 || targetPOI == null) {
+			LoggerTools.LogToast(this, "Could not recieve POI from calling activity.");
+		}
 		
+		targetLocation = targetPOI.standLocation;
 	}
 
 	@Override

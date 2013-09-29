@@ -2,6 +2,8 @@ package com.example.climbxpert;
 
 import java.util.ArrayList;
 import com.example.climbxpert.POI.ClimbRoute;
+import com.example.climbxpert.POI.POI;
+
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -16,12 +18,12 @@ import android.widget.ImageView;
 
 public class CameraViewActivity extends Activity
 			implements SensorEventListener{
-
+	
     private Camera mCamera;
     private CameraView mPreview;
     
+    //TODO: Alon what is this
     private ArrayList<RouteImageConnector> routeList = new ArrayList<RouteImageConnector>();
-    
     
     //sensors
     private SensorManager sensMngr;
@@ -40,24 +42,26 @@ public class CameraViewActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera_view);
 		
+		int recievedPID = this.getIntent().getIntExtra("pid", -1);
+		POI currentPOI = ClimbXpertData.getPOI(recievedPID);
+		ArrayList<ClimbRoute> currentRoutes = currentPOI.routes;
 		
-		//TODO this is an example POI. this should be replaced with the current POI
-		//this set of coordinates work in my apartment facing the computer... (itai)
+		for (ClimbRoute route : currentRoutes) {
+			loadRoute(route);
+		}
 		
-		
-        ClimbRoute firstRoute = new ClimbRoute();
-        firstRoute.azimuth = (float) 91;
-        firstRoute.tilt = (float) 0;
-        firstRoute.imageRscID = R.drawable.test;
-        loadRoute(firstRoute);
-        
-        
-        ClimbRoute secondRoute = new ClimbRoute();
-        secondRoute.azimuth = (float) 95;
-        secondRoute.tilt = (float) 0;
-        secondRoute.imageRscID = R.drawable.test;
-        loadRoute(secondRoute);
-		
+//        ClimbRoute firstRoute = new ClimbRoute();
+//        firstRoute.azimuth = (float) 91;
+//        firstRoute.tilt = (float) 0;
+//        firstRoute.imageRscID = R.drawable.test;
+//        loadRoute(firstRoute);
+//        
+//        
+//        ClimbRoute secondRoute = new ClimbRoute();
+//        secondRoute.azimuth = (float) 95;
+//        secondRoute.tilt = (float) 0;
+//        secondRoute.imageRscID = R.drawable.test;
+//        loadRoute(secondRoute);
 		
 	}
 
