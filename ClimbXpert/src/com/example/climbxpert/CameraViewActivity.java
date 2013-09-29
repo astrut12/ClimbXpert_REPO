@@ -262,6 +262,7 @@ public class CameraViewActivity extends Activity
 	private void loadRoute(ClimbRoute route)
 	{
 		LoggerTools.LogToast(this, "rout: " + route.rid + " image: " + route.getImageId(this));
+		
 		//TODO fix overlapping in clicks
 		ImageButton imgButton = new ImageButton(this);
 		imgButton.setImageResource(route.getImageId(this)); 
