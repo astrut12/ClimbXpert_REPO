@@ -338,7 +338,6 @@ public class SearchActivity extends FragmentActivity
 		
 		Intent intent = new Intent(this,POIInfoActivity.class); 
 		intent.putExtra("pid",poi.pid);
-		intent.putExtra("title",poi.name);
 		startActivityForResult(intent, 0); 
 
 

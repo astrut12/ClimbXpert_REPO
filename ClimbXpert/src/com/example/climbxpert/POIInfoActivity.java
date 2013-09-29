@@ -38,7 +38,7 @@ public class POIInfoActivity extends Activity {
 		name = (TextView)findViewById(R.id.poi_name);
 		info = (TextView)findViewById(R.id.poi_info);
 		routes = (TextView)findViewById(R.id.poi_routes);
-		setTitle(intent.getStringExtra("name"));
+		setTitle(poi.name);
 		
 		name.setText(poi.name);
 		info.setText(poi.info);
