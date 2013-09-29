@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.climbxpert.LoggerTools;
+import com.example.climbxpert.POI.POI;
 
 public class SearchActivity extends FragmentActivity 
 			implements 
@@ -144,6 +145,7 @@ public class SearchActivity extends FragmentActivity
 			
 			if (null != googleMap)
 			{
+				
 				googleMap.setMyLocationEnabled(true);
 				
 				googleMap.setOnMyLocationButtonClickListener(this);
@@ -249,21 +251,13 @@ public class SearchActivity extends FragmentActivity
 	 */
 	private void insertMarkers()
 	{
-		//TODO replace this set of markers with locations from the application's POI database
 		//TODO consider passing the POI ID within the Marker Snippet attribute.
 		
-		
-		googleMap.addMarker(new MarkerOptions()
-					.position(new LatLng(31.762, 35.201))
-					.title("test1"));
-		
-		googleMap.addMarker(new MarkerOptions()
-					.position(new LatLng(31.764, 35.204))
-					.title("test2"));
-		
-		googleMap.addMarker(new MarkerOptions()
-					.position(new LatLng(31.762, 35.203))
-					.title("test3"));
+		for(POI poi : ClimbXpertData.POIList) {
+			googleMap.addMarker(new MarkerOptions()
+			.position(poi.carNavigation)
+			.title(poi.name));	
+		}
 	}
 	
 	

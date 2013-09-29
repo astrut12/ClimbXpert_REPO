@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 public class AddNewRouteActivity extends Activity {
  
@@ -18,6 +19,7 @@ public class AddNewRouteActivity extends Activity {
 	private EditText tilt;
 	private EditText imgId;
 	private EditText azimuth;
+	private Spinner route_rank;
 	private int pid;
 	
 	public void onCreate(Bundle unused) { 
@@ -34,6 +36,7 @@ public class AddNewRouteActivity extends Activity {
 		info = (EditText)findViewById(R.id.route_info);
 		azimuth = (EditText)findViewById(R.id.route_azimuth);
 		tilt = (EditText)findViewById(R.id.route_tilt);
+		route_rank = (Spinner)findViewById(R.id.route_rank_spinner);
 		
         Parse.initialize(this, "Mldts0UdI2e7ndjgYIzcAdFiIRKYRiOhYPrQWzqx", "nyRer8Q1FzdfD2oHp0IekZX4DLAeXXcXciVDgPAf");
 		
@@ -55,6 +58,7 @@ public class AddNewRouteActivity extends Activity {
 				result.putExtra("route_tilt",Double.parseDouble(tilt.getText().toString()));
 				result.putExtra("route_azimuth",Double.parseDouble(azimuth.getText().toString()));
 				result.putExtra("pid", pid);
+				result.putExtra("rank", String.valueOf(route_rank.getSelectedItem()));
 				setResult(RESULT_OK, result); 
 				finish();
 			}
@@ -69,4 +73,9 @@ public class AddNewRouteActivity extends Activity {
 		});	
 			
 	} 	
+	
+	  public void addListenerOnSpinnerItemSelection() {
+			route_rank = (Spinner) findViewById(R.id.route_rank_spinner);
+			route_rank.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+		  }
 }

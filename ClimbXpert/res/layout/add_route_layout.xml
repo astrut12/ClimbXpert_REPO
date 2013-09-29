@@ -20,6 +20,13 @@
         android:hint="Route info"
         android:ems="10" >
     </EditText>
+        <Spinner
+        android:id="@+id/route_rank_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/route_rank_array"
+        android:prompt="@string/route_rank_prompt" />
+        
 	<EditText
         android:id="@+id/route_image"
         android:layout_width="match_parent"

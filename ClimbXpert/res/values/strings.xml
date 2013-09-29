@@ -20,5 +20,44 @@
     <string name="title_activity_POI_manager">POI Manager</string>
     <string name="str_btn_find">Find</string>
     <string name="hnt_et_location">Enter location</string>
+     <string name="route_rank_prompt">Route Rank</string>   
+    <string-array name="route_rank_array">
+        <item>4A</item>
+        <item>4A+</item>
+        <item>4B</item>
+        <item>4B+</item>
+        <item>4C</item>
+        <item>4C+</item>
+        <item>5A</item>
+        <item>5A+</item>
+        <item>5B</item>
+        <item>5B+</item>
+        <item>5C</item>
+        <item>5C+</item>
+        <item>6A</item>
+        <item>6A+</item>
+        <item>6B</item>
+        <item>6B+</item>
+        <item>6C</item>
+        <item>6C+</item>
+        <item>7A</item>
+        <item>7A+</item>
+        <item>7B</item>
+        <item>7B+</item>
+        <item>7C</item>
+        <item>7C+</item>
+        <item>8A</item>
+        <item>8A+</item>
+        <item>8B</item>
+        <item>8B+</item>
+        <item>8C</item>
+        <item>8C+</item>
+        <item>9A</item>
+        <item>9A+</item>
+        <item>9B</item>
+        <item>9B+</item>
+        <item>9C</item>
+        <item>9C+</item>
+    </string-array>
 
 </resources>

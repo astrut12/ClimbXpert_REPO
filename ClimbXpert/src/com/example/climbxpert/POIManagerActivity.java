@@ -79,6 +79,7 @@ public class POIManagerActivity extends Activity {
 						parseObject.put("azimuth", data.getDoubleExtra("route_azimuth",-1));
 						parseObject.put("tilt", data.getDoubleExtra("route_tilt",-1));
 						parseObject.put("pid", data.getIntExtra("pid", -1));
+						parseObject.put("rank", data.getStringExtra("rank"));
 						parseObject.saveInBackground();
 						Log.d("Route","sent to parse");
 						
