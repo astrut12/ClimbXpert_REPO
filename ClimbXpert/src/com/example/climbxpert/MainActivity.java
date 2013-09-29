@@ -100,6 +100,7 @@ public class MainActivity extends Activity {
     	//(to distinguish calls from outer intents or from navigation context)
     	Intent intent = new Intent(this, NavigateActivity.class);
     	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
+    	intent.putExtra("pid", ClimbXpertData.POIList.get(0).pid);
     	startActivity(intent);
     }
     

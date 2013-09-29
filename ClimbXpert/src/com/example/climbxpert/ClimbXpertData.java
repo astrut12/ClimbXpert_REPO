@@ -8,4 +8,11 @@ public class ClimbXpertData {
 	public static ArrayList<POI> POIList;
 	public static int pid=0;
 	
+	public static POI getPOI(int pid) {
+		for (POI poi : POIList ) {
+			if (poi.pid == pid)
+				return poi;
+		}
+		return null;
+	}
 }
