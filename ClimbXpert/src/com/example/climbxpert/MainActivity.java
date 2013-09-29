@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 
 import com.example.climbxpert.POI.ClimbRoute;
 import com.example.climbxpert.POI.POI;
@@ -19,6 +20,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 public class MainActivity extends Activity {
+	
+	boolean debug = false;
 	
 	POI currPoi;
 	private ArrayList<POI> arrayList;
@@ -34,6 +37,14 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+		Button POIb = (Button) findViewById(R.id.POIViewButton);
+		Button Testingb = (Button) findViewById(R.id.TestingViewButton);
+		Button Camerab = (Button) findViewById(R.id.CameraViewButton);
+		if(!debug) {
+			POIb.setVisibility(View.GONE);
+			Testingb.setVisibility(View.GONE);
+			Camerab.setVisibility(View.GONE);
+		}
         Parse.initialize(this, "Mldts0UdI2e7ndjgYIzcAdFiIRKYRiOhYPrQWzqx", "nyRer8Q1FzdfD2oHp0IekZX4DLAeXXcXciVDgPAf");
         arrayList = new ArrayList<POI>();
 		try {
