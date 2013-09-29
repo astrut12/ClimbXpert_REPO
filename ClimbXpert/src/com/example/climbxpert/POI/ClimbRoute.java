@@ -1,6 +1,9 @@
 package com.example.climbxpert.POI;
 
+import android.content.Context;
+
 import com.example.climbxpert.MathOrientation;
+import com.example.climbxpert.R;
 
 
 public class ClimbRoute {
@@ -23,20 +26,26 @@ public class ClimbRoute {
 	// The tilt controls the gravity orientation (0 for horizontal)
 	public float tilt;
 	
+	public int parentPOIid;
 	
-	public ClimbRoute(String r_name, String r_info,String r_rank, int r_id, float r_azimuth, float r_tilt) {
+	public ClimbRoute(String r_name, String r_info,String r_rank, int r_id, float r_azimuth, float r_tilt, int r_pid) {
 		rank = r_rank;
 		name = r_name;
 		info = r_info;
 		rid = r_id;
 		azimuth = r_azimuth;
 		tilt = r_tilt;
+		parentPOIid = r_pid;
 	}
 	
 	public ClimbRoute() {
 		
 	}
-
+	
+	public int getImageId(Context context) {
+		return context.getResources().getIdentifier("p"+String.valueOf(parentPOIid)+"r"+String.valueOf(rid), null, null);
+	}
+	
 	public float getTiltDifference(float compareTilt)
 	{
 		return MathOrientation.getAngleDifference(tilt, compareTilt);

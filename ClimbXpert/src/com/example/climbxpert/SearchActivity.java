@@ -310,31 +310,7 @@ public class SearchActivity extends FragmentActivity
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		//TODO: 1. Get routes of POI from remote DB 2. set intent with pid 3.open activity
-		if(null == poi.routes) {
-			try {
-				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Route");
-				query.whereEqualTo("pid", poi.pid);
-				query.findInBackground(new FindCallback<ParseObject>() {
-					public void done(List<ParseObject> results, ParseException e) {
-						if (e != null) {
-							//error
-						} 
-						else {
-							if(!results.isEmpty()) {
-
-								poi.routes = new ArrayList<ClimbRoute>();
-								for(ParseObject po : (List<ParseObject>)results) {
-									poi.routes.add(new ClimbRoute(po.getString("name"),po.getString("info"),po.getString("rank"),ClimbXpertData.rid,(float)po.getDouble("azimuth"),(float)po.getDouble("tilt")));
-								}
-							}
-						}
-					}
-				});
-			} 
-			catch (Exception e1) {
-				Log.d("exception on route retreival",e1.getLocalizedMessage());
-			}
-		}
+		
 		
 		Intent intent = new Intent(this,POIInfoActivity.class); 
 		intent.putExtra("pid",poi.pid);

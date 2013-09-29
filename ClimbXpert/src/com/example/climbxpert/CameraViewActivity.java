@@ -1,8 +1,14 @@
 package com.example.climbxpert;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.example.climbxpert.POI.ClimbRoute;
 import com.example.climbxpert.POI.POI;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.hardware.Camera;
 import android.hardware.Sensor;
@@ -12,15 +18,22 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 public class CameraViewActivity extends Activity
-			implements SensorEventListener{
+			implements SensorEventListener,
+			View.OnClickListener{
 	
     private Camera mCamera;
     private CameraView mPreview;
+    
+    private POI currentPOI;
     
     //TODO: Alon what is this
     private ArrayList<RouteImageConnector> routeList = new ArrayList<RouteImageConnector>();
@@ -43,11 +56,21 @@ public class CameraViewActivity extends Activity
 		setContentView(R.layout.activity_camera_view);
 		
 		int recievedPID = this.getIntent().getIntExtra("pid", -1);
-		POI currentPOI = ClimbXpertData.getPOI(recievedPID);
+		currentPOI = ClimbXpertData.getPOI(recievedPID);
 		ArrayList<ClimbRoute> currentRoutes = currentPOI.routes;
 		
-		for (ClimbRoute route : currentRoutes) {
-			loadRoute(route);
+		
+		
+		
+		if (currentRoutes.size() == 0 )
+		{
+			LoggerTools.LogToast(this, "No Routes to display");
+		}
+		else
+		{
+			for (ClimbRoute route : currentRoutes) {
+				loadRoute(route);
+			}
 		}
 		
 //        ClimbRoute firstRoute = new ClimbRoute();
@@ -131,7 +154,10 @@ public class CameraViewActivity extends Activity
     private void releaseCamera(){
         
     	unsubscribeSensors();
-    	    	
+    	
+    	FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
+    	preview.removeAllViews();
+    	
     	if (mPreview != null)
         {
         	mPreview.closeView();
@@ -235,9 +261,16 @@ public class CameraViewActivity extends Activity
 	 */
 	private void loadRoute(ClimbRoute route)
 	{
-		ImageView tmpView = new ImageView(this);
-        tmpView.setImageResource(route.rid);
-        routeList.add(new RouteImageConnector(route, tmpView));
+
+		//TODO fix overlapping in clicks
+		ImageButton imgButton = new ImageButton(this);
+		imgButton.setImageResource(route.getImageId(this)); 
+		imgButton.setBackground(null);
+		imgButton.setAdjustViewBounds(true);
+		imgButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+		imgButton.setTag(route.rid);
+		imgButton.setOnClickListener(this);
+		routeList.add(new RouteImageConnector(route, imgButton));
 	}
 	
 	
@@ -253,6 +286,36 @@ public class CameraViewActivity extends Activity
 		{
 			route = climbRoute;
 			imgView = imageView;
+		}
+	}
+
+
+	/**
+	 * handler for route clicks. Opens Route info activity.
+	 */
+	@Override
+	public void onClick(View v) {
+		LoggerTools.LogToastShort(this, "Route Clicked");
+		Intent intent = new Intent(this,RouteInfoActivity.class);
+		int rid = Integer.parseInt(v.getTag().toString());
+		ClimbRoute route = null;
+		for (RouteImageConnector imgConnector : routeList)
+		{
+			if (imgConnector.route.rid == rid)
+			{
+				route = imgConnector.route;
+				break;
+			}
+		}
+		
+		if (null != route)
+		{
+			intent.putExtra("rid",route.rid);
+			intent.putExtra("info",route.info);
+			intent.putExtra("rank",route.rank);
+			
+			startActivityForResult(intent, 0); 
+			
 		}
 	}
 }

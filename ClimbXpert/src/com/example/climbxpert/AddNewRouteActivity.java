@@ -17,7 +17,6 @@ public class AddNewRouteActivity extends Activity {
 	private EditText name;
 	private EditText info;
 	private EditText tilt;
-	private EditText imgId;
 	private EditText azimuth;
 	private Spinner route_rank;
 	private int pid;
@@ -31,7 +30,6 @@ public class AddNewRouteActivity extends Activity {
 		setContentView(R.layout.add_route_layout);
 		route_btnOK = (Button)findViewById(R.id.route_btnOK);
 		route_btnCancel = (Button)findViewById(R.id.route_btnCancel);
-		imgId = (EditText)findViewById(R.id.route_image);
 		name = (EditText)findViewById(R.id.route_name);
 		info = (EditText)findViewById(R.id.route_info);
 		azimuth = (EditText)findViewById(R.id.route_azimuth);
@@ -55,7 +53,6 @@ public class AddNewRouteActivity extends Activity {
 				Intent result = new Intent();	
 				result.putExtra("route_name",name.getText().toString());
 				result.putExtra("route_info",info.getText().toString());
-				result.putExtra("route_image",Integer.parseInt(imgId.getText().toString()));
 				result.putExtra("route_tilt",Double.parseDouble(tilt.getText().toString()));
 				result.putExtra("route_azimuth",Double.parseDouble(azimuth.getText().toString()));
 				result.putExtra("pid", pid);

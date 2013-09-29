@@ -71,16 +71,18 @@ public class POIManagerActivity extends Activity {
 					case (RESULT_CANCELED) : {
 						return;
 					}
-					case (RESULT_OK) : {
+					case (RESULT_OK) : {						
 						ParseObject parseObject = new ParseObject("Route");
 						parseObject.put("name", data.getStringExtra("route_name"));
 						parseObject.put("info", data.getStringExtra("route_info"));
-						parseObject.put("imgId", data.getIntExtra("route_image", -1));
 						parseObject.put("azimuth", data.getDoubleExtra("route_azimuth",-1));
 						parseObject.put("tilt", data.getDoubleExtra("route_tilt",-1));
 						parseObject.put("pid", data.getIntExtra("pid", -1));
+						parseObject.put("rid", ClimbXpertData.rid);
 						parseObject.put("rank", data.getStringExtra("rank"));
 						parseObject.saveInBackground();
+						LoggerTools.LogToast(this, "Added Route with rid: " + ClimbXpertData.rid);
+						ClimbXpertData.rid++;
 						Log.d("Route","sent to parse");
 						
 					}
