@@ -35,6 +35,7 @@ public class NavigateActivity extends Activity
 	private SensorManager sensMngr;
 	private Sensor magno;
 	
+	private POI currentPOI;
 	
 	// Client for connecting to location service
 	private LocationClient locClient;
