@@ -43,6 +43,7 @@ public class POIInfoActivity extends Activity {
 		name.setText(poi.name);
 		info.setText(poi.info);
 		routes.setText("Number Of Routes: "+String.valueOf(poi.routes.size()));
+		imgId.setImageResource(poi.getImageId(this));
 		
 		poi_btn_navigate.setOnClickListener( new View.OnClickListener() {
 			
