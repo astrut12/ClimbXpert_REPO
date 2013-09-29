@@ -73,19 +73,6 @@ public class CameraViewActivity extends Activity
 			}
 		}
 		
-//        ClimbRoute firstRoute = new ClimbRoute();
-//        firstRoute.azimuth = (float) 91;
-//        firstRoute.tilt = (float) 0;
-//        firstRoute.imageRscID = R.drawable.test;
-//        loadRoute(firstRoute);
-//        
-//        
-//        ClimbRoute secondRoute = new ClimbRoute();
-//        secondRoute.azimuth = (float) 95;
-//        secondRoute.tilt = (float) 0;
-//        secondRoute.imageRscID = R.drawable.test;
-//        loadRoute(secondRoute);
-		
 	}
 
 	@Override
