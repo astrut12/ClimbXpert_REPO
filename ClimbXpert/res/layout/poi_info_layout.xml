@@ -1,70 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Name of POI"
-        android:ems="10" >
-
-        <requestFocus />
-    </EditText>
-    <EditText
-        android:id="@+id/info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="POI info"
-        android:ems="10" >
-    </EditText>
-	<EditText
-        android:id="@+id/lon"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:hint="Longtitude"
-        android:ems="10" >
-    </EditText>
-    <EditText
-        android:id="@+id/lat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:hint="Latitude"
-        android:ems="10" >
-        </EditText>
-        <EditText
-        android:id="@+id/azimuth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:hint="Azimuth"
-        android:ems="10" >
-    </EditText>
-        <Button
-        android:id="@+id/btnImg"
+    <TextView
+        android:id="@+id/poi_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Load Bitmap" />
+        android:ems="10" >
+    </TextView>
+    <TextView
+        android:id="@+id/poi_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10" >
+    </TextView>
+    <TextView
+        android:id="@+id/poi_routes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10" >
+    </TextView>
+    <ImageView
+        android:id="@+id/poi_img"
+        android:contentDescription="POI Image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/btnOK"
+            android:id="@+id/foot_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK" />
+            android:text="On Foot" />
 
         <Button
-            android:id="@+id/btnCancel"
+            android:id="@+id/nav_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"/>
+            android:text="Navigate"/>
 
     </LinearLayout>
 

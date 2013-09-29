@@ -16,15 +16,22 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
  
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,6 +44,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.climbxpert.LoggerTools;
+import com.example.climbxpert.POI.ClimbRoute;
 import com.example.climbxpert.POI.POI;
 
 public class SearchActivity extends FragmentActivity 
@@ -47,6 +55,8 @@ public class SearchActivity extends FragmentActivity
 			OnMyLocationButtonClickListener, //listen to clicks on the location buttons
 			OnInfoWindowClickListener //listen to click events for marker's info bubbles
 {
+	
+	POI poi;
 
 	// A map element to refer to the map fragment
 	private GoogleMap googleMap;
@@ -253,8 +263,8 @@ public class SearchActivity extends FragmentActivity
 		
 		for(POI poi : ClimbXpertData.POIList) {
 			googleMap.addMarker(new MarkerOptions()
-			.position(poi.carNavigation)
-			.title(poi.name));	
+			.position(poi.carNavigation).snippet(poi.info)
+			.title(String.valueOf(poi.pid)));	
 		}
 	}
 	
@@ -299,12 +309,41 @@ public class SearchActivity extends FragmentActivity
 	 */
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-		//TODO open some activity to display more options 
+		//TODO: 1. Get routes of POI from remote DB 2. set intent with pid 3.open activity
+		if(null == poi.routes) {
+			try {
+				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Route");
+				query.whereEqualTo("pid", poi.pid);
+				query.findInBackground(new FindCallback<ParseObject>() {
+					public void done(List<ParseObject> results, ParseException e) {
+						if (e != null) {
+							//error
+						} 
+						else {
+							if(!results.isEmpty()) {
+
+								poi.routes = new ArrayList<ClimbRoute>();
+								for(ParseObject po : (List<ParseObject>)results) {
+									poi.routes.add(new ClimbRoute(po.getString("name"),po.getString("info"),po.getString("rank"),po.getInt("imgId"),(float)po.getDouble("azimuth"),(float)po.getDouble("tilt")));
+								}
+							}
+						}
+					}
+				});
+			} 
+			catch (Exception e1) {
+				Log.d("exception on route retreival",e1.getLocalizedMessage());
+			}
+		}
 		
-		LoggerTools.LogToast(this, "Marker info was clicked");
-		
+		Intent intent = new Intent(this,POIInfoActivity.class); 
+		intent.putExtra("pid",poi.pid);
+		intent.putExtra("title",poi.name);
+		startActivityForResult(intent, 0); 
+
+
 	}
-	
+
 	
 	/**
 	 * The class replaces the default handler for rendering Markers' info bubbles. 
@@ -326,12 +365,13 @@ public class SearchActivity extends FragmentActivity
 		public View getInfoContents(Marker marker) {
 	
 			
-			//TODO find the POI in the POI database and insert the relevant information below.
+			poi = ClimbXpertData.getPOI(Integer.valueOf(marker.getTitle()));
 			
-			((TextView) markerContent.findViewById(R.id.markerTextView1)).setText("The title: " + marker.getTitle());
+			((TextView) markerContent.findViewById(R.id.markerTextView1)).setText(poi.name);
 			
-			((TextView) markerContent.findViewById(R.id.markerTextView2)).setText("The content: " + marker.getTitle());
+			((TextView) markerContent.findViewById(R.id.markerTextView2)).setText(poi.info);
 			
+			//TODO: Set image of POI
 			((ImageView) markerContent.findViewById(R.id.markerImage)).setImageResource(0);
 
 			

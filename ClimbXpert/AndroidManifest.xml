@@ -78,6 +78,11 @@
             android:label="@string/title_activity_POI_manager" >
         </activity>
         <activity
+            android:name="com.example.climbxpert.POIInfoActivity"
+            android:label="@string/title_activity_POI_Info" 
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
+        <activity
             android:name="com.example.climbxpert.AddNewRouteActivity"
             android:label="@string/title_activity_new_Route" >
         </activity>

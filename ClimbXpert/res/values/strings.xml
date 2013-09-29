@@ -20,6 +20,7 @@
     <string name="title_activity_POI_manager">POI Manager</string>
     <string name="str_btn_find">Find</string>
     <string name="hnt_et_location">Enter location</string>
+   	<string name="title_activity_POI_Info">POI Info</string>
      <string name="route_rank_prompt">Route Rank</string>   
     <string-array name="route_rank_array">
         <item>4A</item>
