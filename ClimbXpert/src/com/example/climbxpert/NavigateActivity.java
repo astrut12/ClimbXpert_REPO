@@ -53,11 +53,6 @@ public class NavigateActivity extends Activity
 	private LatLng targetLocation;
 	
 	
-	private final double EARTH_RADIUS = 6371000;
-	
-	// Adjusts the scaling of distance calculations
-	private final double SCALE_FOR_REAL_DISTANCE_CALCULATION = 0.016434811;
-	
 	// The minimum distance in meters to enable camera view button
 	private final double MINIMUM_DISTANCE_TO_TARGET = 5.0;
 	
@@ -240,11 +235,9 @@ public class NavigateActivity extends Activity
 			return -1;
 		}
 		
-		
-		double x = (lastKnownLocation.getLatitude() - targetLocation.latitude) * EARTH_RADIUS;
-		double y = (lastKnownLocation.getLongitude() - targetLocation.longitude) * EARTH_RADIUS;
-		
-		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) * SCALE_FOR_REAL_DISTANCE_CALCULATION;
+		return MathOrientation.calculateLocationsDistance(
+					new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), 
+					targetLocation);
 		
 	}
 	
