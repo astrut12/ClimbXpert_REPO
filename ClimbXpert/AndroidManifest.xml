@@ -30,7 +30,7 @@
 
     <!--
          The following two permissions are not required to use
-	     Google Maps Android API v2, but are recommended.
+	     Google Maps Android API v2, but are recommended.
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -101,6 +101,10 @@
             android:name="com.example.climbxpert.RouteInfoActivity"
             android:label="@string/route_info"
             android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="com.example.climbxpert.FindNearPOIActivity"
+            android:label="@string/title_activity_find_near_poi" >
         </activity>
     </application>
 
