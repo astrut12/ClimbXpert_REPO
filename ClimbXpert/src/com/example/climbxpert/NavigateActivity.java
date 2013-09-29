@@ -73,12 +73,12 @@ public class NavigateActivity extends Activity
 		//TODO maybe -1 is not invalid id
 //		defaultTargetLocation = new LatLng(31.762641,35.201756);
 		int recievedPID = this.getIntent().getIntExtra("pid", -1);
-		POI targetPOI = ClimbXpertData.getPOI(recievedPID);
-		if (recievedPID < 0 || targetPOI == null) {
+		currentPOI = ClimbXpertData.getPOI(recievedPID);
+		if (recievedPID < 0 || currentPOI == null) {
 			LoggerTools.LogToast(this, "Could not recieve POI from calling activity.");
 		}
 		
-		targetLocation = targetPOI.standLocation;
+		targetLocation = currentPOI.standLocation;
 	}
 
 	@Override
@@ -271,7 +271,7 @@ public class NavigateActivity extends Activity
 	public void openCameraView(View view)
     {
     	Intent intent = new Intent(this, CameraViewActivity.class);
-    	//TODO add POI info in the intent
+    	intent.putExtra("pid",currentPOI.pid);
     	startActivity(intent);
     }
 }
