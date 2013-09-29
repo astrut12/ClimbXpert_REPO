@@ -8,11 +8,11 @@
     <string name="main_instruction">Click Search to find climbing locations or Navigate to get to a site next to you</string>
     <string name="search">Search</string>
     <string name="navigate">Navigate</string>
-    <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_navigate">NavigateActivity</string>
+    <string name="title_activity_search">Search For a Site</string>
+    <string name="title_activity_navigate">Navigate To Location</string>
     <string name="image_not_available">Image for the POI is not available</string>
     <string name="camera_view_button_label">Camera View</string>
-    <string name="title_activity_camera_view">CameraViewActivity</string>
+    <string name="title_activity_camera_view">Location View</string>
     <string name="title_activity_camera">Camera</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_new_POI">Add New POI</string>
@@ -62,7 +62,7 @@
         <item>9C+</item>
     </string-array>
 
-    <string name="title_activity_route_info">RouteInfoActivity</string>
+    <string name="title_activity_route_info">Route Info</string>
 
     <string name="route_info">Route Info</string>
 
