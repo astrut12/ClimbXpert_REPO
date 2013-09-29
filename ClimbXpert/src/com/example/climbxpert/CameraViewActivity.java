@@ -1,8 +1,14 @@
 package com.example.climbxpert;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.example.climbxpert.POI.ClimbRoute;
 import com.example.climbxpert.POI.POI;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.hardware.Camera;
 import android.hardware.Sensor;
@@ -13,6 +19,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -52,8 +59,18 @@ public class CameraViewActivity extends Activity
 		currentPOI = ClimbXpertData.getPOI(recievedPID);
 		ArrayList<ClimbRoute> currentRoutes = currentPOI.routes;
 		
-		for (ClimbRoute route : currentRoutes) {
-			loadRoute(route);
+		
+		
+		
+		if (currentRoutes.size() == 0 )
+		{
+			LoggerTools.LogToast(this, "No Routes to display");
+		}
+		else
+		{
+			for (ClimbRoute route : currentRoutes) {
+				loadRoute(route);
+			}
 		}
 		
 //        ClimbRoute firstRoute = new ClimbRoute();

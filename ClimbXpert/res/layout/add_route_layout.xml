@@ -26,15 +26,7 @@
         android:layout_height="wrap_content"
         android:entries="@array/route_rank_array"
         android:prompt="@string/route_rank_prompt" />
-        
-	<EditText
-        android:id="@+id/route_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:hint="Route Image ID"
-        android:ems="10" >
-    </EditText>
+    
     <EditText
         android:id="@+id/route_azimuth"
         android:layout_width="match_parent"

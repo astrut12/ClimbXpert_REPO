@@ -81,6 +81,20 @@ public class MainActivity extends Activity {
 			Log.d("POIDAL", "pid "+String.valueOf(pid));
 			Log.d("POIDAL", "name "+String.valueOf(name));
 			Log.d("POIDAL", "lon "+String.valueOf(lon));
+			
+			if (poi.routes == null)
+			{
+				poi.routes = new ArrayList<ClimbRoute>();
+			}
+			
+			for (ParseObject ro : route_query.find())
+			{
+				if (ro.getInt("pid") == pid)
+				{
+					poi.routes.add(new ClimbRoute(ro.getString("name"),ro.getString("info"), ro.getString("rank"), ro.getInt("rid"), (float)ro.getDouble("azimuth"),(float) ro.getDouble("tilt"), pid));
+				}
+			}
+			
 			ClimbXpertData.POIList.add(poi);
 		}
 		ClimbXpertData.pid = ClimbXpertData.POIList.size();
@@ -88,8 +102,8 @@ public class MainActivity extends Activity {
 		ClimbXpertData.rid = route_query.count();
 		
 		//TODO: just a POI for testing
-		ArrayList<ClimbRoute> testAlonRoutes = new ArrayList<ClimbRoute>();
-		ClimbRoute testAlonRoute = new ClimbRoute();
+//		ArrayList<ClimbRoute> testAlonRoutes = new ArrayList<ClimbRoute>();
+//		ClimbRoute testAlonRoute = new ClimbRoute();
 	//	testAlonRoute.azimuth = 175;
 	//	testAlonRoute.tilt = 0;
 	//	testAlonRoute.imageRscID = R.drawable.test;
@@ -125,7 +139,7 @@ public class MainActivity extends Activity {
     	//(to distinguish calls from outer intents or from navigation context)
     	Intent intent = new Intent(this, NavigateActivity.class);
     	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
-    	intent.putExtra("pid", ClimbXpertData.POIList.get(3).pid);
+    	intent.putExtra("pid", ClimbXpertData.POIList.get(1).pid);
     	startActivity(intent);
     }
     
@@ -133,7 +147,7 @@ public class MainActivity extends Activity {
     {
     	Intent intent = new Intent(this, CameraViewActivity.class);
     	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
-    	intent.putExtra("pid", ClimbXpertData.POIList.get(3).pid);
+    	intent.putExtra("pid", ClimbXpertData.POIList.get(1).pid);
     	startActivity(intent);
     }
     

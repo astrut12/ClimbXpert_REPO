@@ -37,7 +37,7 @@ public class POI implements Parcelable {
 	public ArrayList<ClimbRoute> routes;
 
 	
-	
+	//TODO remove parameter for route list
 	public POI(int arg_id, String arg_name, String arg_info, int arg_imageID, LatLng arg_carNavigation, 
 				LatLng arg_standLocation, ArrayList<ClimbRoute> arg_routes)
 	{
