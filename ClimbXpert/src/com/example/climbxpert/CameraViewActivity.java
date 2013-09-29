@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -24,6 +25,8 @@ public class CameraViewActivity extends Activity
 	
     private Camera mCamera;
     private CameraView mPreview;
+    
+    private POI currentPOI;
     
     //TODO: Alon what is this
     private ArrayList<RouteImageConnector> routeList = new ArrayList<RouteImageConnector>();
@@ -46,7 +49,7 @@ public class CameraViewActivity extends Activity
 		setContentView(R.layout.activity_camera_view);
 		
 		int recievedPID = this.getIntent().getIntExtra("pid", -1);
-		POI currentPOI = ClimbXpertData.getPOI(recievedPID);
+		currentPOI = ClimbXpertData.getPOI(recievedPID);
 		ArrayList<ClimbRoute> currentRoutes = currentPOI.routes;
 		
 		for (ClimbRoute route : currentRoutes) {
@@ -272,6 +275,26 @@ public class CameraViewActivity extends Activity
 	@Override
 	public void onClick(View v) {
 		LoggerTools.LogToastShort(this, "Route Clicked");
+		Intent intent = new Intent(this,RouteInfoActivity.class);
+		int rid = Integer.parseInt(v.getTag().toString());
+		ClimbRoute route = null;
+		for (RouteImageConnector imgConnector : routeList)
+		{
+			if (imgConnector.route.rid == rid)
+			{
+				route = imgConnector.route;
+				break;
+			}
+		}
 		
+		if (null != route)
+		{
+			intent.putExtra("rid",route.rid);
+			intent.putExtra("info",route.info);
+			intent.putExtra("rank",route.rank);
+			
+			startActivityForResult(intent, 0); 
+			
+		}
 	}
 }
