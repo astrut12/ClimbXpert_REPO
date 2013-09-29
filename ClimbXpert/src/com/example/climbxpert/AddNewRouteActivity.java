@@ -38,6 +38,7 @@ public class AddNewRouteActivity extends Activity {
 		tilt = (EditText)findViewById(R.id.route_tilt);
 		route_rank = (Spinner)findViewById(R.id.route_rank_spinner);
 		
+		
         Parse.initialize(this, "Mldts0UdI2e7ndjgYIzcAdFiIRKYRiOhYPrQWzqx", "nyRer8Q1FzdfD2oHp0IekZX4DLAeXXcXciVDgPAf");
 		
 		

@@ -54,6 +54,7 @@ public class MainActivity extends Activity {
 		String name,info;
 		POI poi;
 		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("POI");
+		ParseQuery<ParseObject> route_query = new ParseQuery<ParseObject>("Route");
 		ClimbXpertData.POIList = new ArrayList<POI>();
 		
 		for(ParseObject po : query.find()) {
@@ -72,16 +73,18 @@ public class MainActivity extends Activity {
 			ClimbXpertData.POIList.add(poi);
 		}
 		ClimbXpertData.pid = ClimbXpertData.POIList.size();
+	
+		ClimbXpertData.rid = route_query.count();
 		
 		//TODO: just a POI for testing
 		ArrayList<ClimbRoute> testAlonRoutes = new ArrayList<ClimbRoute>();
 		ClimbRoute testAlonRoute = new ClimbRoute();
-		testAlonRoute.azimuth = 175;
-		testAlonRoute.tilt = 0;
-		testAlonRoute.imageRscID = R.drawable.test;
-		testAlonRoutes.add(testAlonRoute);
-		POI testAlonPOI = new POI(5, "ALON test", "asdfadsf", 0, new LatLng(30, 30), new LatLng(30, 30), testAlonRoutes);
-		ClimbXpertData.POIList.add(testAlonPOI);
+	//	testAlonRoute.azimuth = 175;
+	//	testAlonRoute.tilt = 0;
+	//	testAlonRoute.imageRscID = R.drawable.test;
+	//	testAlonRoutes.add(testAlonRoute);
+	//	POI testAlonPOI = new POI(5, "ALON test", "asdfadsf", 0, new LatLng(30, 30), new LatLng(30, 30), testAlonRoutes);
+	//	ClimbXpertData.POIList.add(testAlonPOI);
 	}
 
     @Override

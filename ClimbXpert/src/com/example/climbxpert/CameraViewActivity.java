@@ -236,7 +236,7 @@ public class CameraViewActivity extends Activity
 	private void loadRoute(ClimbRoute route)
 	{
 		ImageView tmpView = new ImageView(this);
-        tmpView.setImageResource(route.imageRscID);
+        tmpView.setImageResource(route.rid);
         routeList.add(new RouteImageConnector(route, tmpView));
 	}
 	

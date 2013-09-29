@@ -13,14 +13,10 @@ public class ClimbRoute {
 		
 	// Information about the specific route
 	public String info;
-	
+
 	// The route's ID
 	public int rid;
-	
-	// The route image resource ID
-	public int imageRscID;
-	
-	
+
 	// The orientation azimuth should be between 0 to 360
 	public float azimuth;
 	
@@ -28,11 +24,11 @@ public class ClimbRoute {
 	public float tilt;
 	
 	
-	public ClimbRoute(String r_name, String r_info,String r_rank, int r_imgId, float r_azimuth, float r_tilt) {
+	public ClimbRoute(String r_name, String r_info,String r_rank, int r_id, float r_azimuth, float r_tilt) {
 		rank = r_rank;
 		name = r_name;
 		info = r_info;
-		imageRscID = r_imgId;
+		rid = r_id;
 		azimuth = r_azimuth;
 		tilt = r_tilt;
 	}
