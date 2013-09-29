@@ -22,12 +22,13 @@
         android:layout_height="wrap_content"
         android:ems="10" >
     </TextView>
+
     <ImageView
         android:id="@+id/poi_img"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:contentDescription="POI Image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher"/>
+        android:src="@drawable/ic_launcher" />
 
     <LinearLayout
         android:layout_width="wrap_content"
