@@ -137,7 +137,10 @@ public class CameraViewActivity extends Activity
     private void releaseCamera(){
         
     	unsubscribeSensors();
-    	    	
+    	
+    	FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
+    	preview.removeAllViews();
+    	
     	if (mPreview != null)
         {
         	mPreview.closeView();
