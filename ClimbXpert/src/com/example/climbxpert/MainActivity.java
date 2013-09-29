@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.climbxpert.POI.ClimbRoute;
 import com.example.climbxpert.POI.POI;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -71,6 +72,16 @@ public class MainActivity extends Activity {
 			ClimbXpertData.POIList.add(poi);
 		}
 		ClimbXpertData.pid = ClimbXpertData.POIList.size();
+		
+		//TODO: just a POI for testing
+		ArrayList<ClimbRoute> testAlonRoutes = new ArrayList<ClimbRoute>();
+		ClimbRoute testAlonRoute = new ClimbRoute();
+		testAlonRoute.azimuth = 175;
+		testAlonRoute.tilt = 0;
+		testAlonRoute.imageRscID = R.drawable.test;
+		testAlonRoutes.add(testAlonRoute);
+		POI testAlonPOI = new POI(5, "ALON test", "asdfadsf", 0, new LatLng(30, 30), new LatLng(30, 30), testAlonRoutes);
+		ClimbXpertData.POIList.add(testAlonPOI);
 	}
 
     @Override
@@ -100,7 +111,7 @@ public class MainActivity extends Activity {
     	//(to distinguish calls from outer intents or from navigation context)
     	Intent intent = new Intent(this, NavigateActivity.class);
     	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
-    	intent.putExtra("pid", ClimbXpertData.POIList.get(0).pid);
+    	intent.putExtra("pid", ClimbXpertData.POIList.get(3).pid);
     	startActivity(intent);
     }
     
@@ -108,6 +119,7 @@ public class MainActivity extends Activity {
     {
     	Intent intent = new Intent(this, CameraViewActivity.class);
     	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
+    	intent.putExtra("pid", ClimbXpertData.POIList.get(3).pid);
     	startActivity(intent);
     }
     
