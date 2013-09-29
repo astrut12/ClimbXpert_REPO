@@ -4,7 +4,7 @@
     <string name="app_name">ClimbXpert</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="wellcome_greeting">Wellcome to ClimbXpert</string>
+    <string name="wellcome_greeting">Welcome to ClimbXpert</string>
     <string name="main_instruction">Click Search to find climbing locations or Navigate to get to a site next to you</string>
     <string name="search">Search</string>
     <string name="navigate">Navigate</string>
