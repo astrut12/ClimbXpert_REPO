@@ -63,7 +63,8 @@
     </string-array>
 
     <string name="title_activity_route_info">Route Info</string>
-
     <string name="route_info">Route Info</string>
+    <string name="title_activity_find_near_poi">Looking for nearby activities</string>
+    <string name="looking_for_nearby_activities_">looking for nearby activities...</string>
 
 </resources>

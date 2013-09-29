@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -58,6 +59,10 @@ public class POI implements Parcelable {
 	}
 
 
+	public int getImageId(Context context) {
+		String str = "p"+String.valueOf(pid);
+		return context.getResources().getIdentifier(str, "drawable", "com.example.climbxpert");
+	}
 
 	@Override
 	public int describeContents() {
