@@ -13,11 +13,14 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.view.Menu;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 public class CameraViewActivity extends Activity
-			implements SensorEventListener{
+			implements SensorEventListener,
+			View.OnClickListener{
 	
     private Camera mCamera;
     private CameraView mPreview;
@@ -235,9 +238,15 @@ public class CameraViewActivity extends Activity
 	 */
 	private void loadRoute(ClimbRoute route)
 	{
-		ImageView tmpView = new ImageView(this);
-        tmpView.setImageResource(route.imageRscID);
-        routeList.add(new RouteImageConnector(route, tmpView));
+		//TODO fix overlapping in clicks
+		ImageButton imgButton = new ImageButton(this);
+		imgButton.setImageResource(route.imageRscID);
+		imgButton.setBackground(null);
+		imgButton.setAdjustViewBounds(true);
+		imgButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+		imgButton.setTag(route.rid);
+		imgButton.setOnClickListener(this);
+		routeList.add(new RouteImageConnector(route, imgButton));
 	}
 	
 	
@@ -254,5 +263,15 @@ public class CameraViewActivity extends Activity
 			route = climbRoute;
 			imgView = imageView;
 		}
+	}
+
+
+	/**
+	 * handler for route clicks. Opens Route info activity.
+	 */
+	@Override
+	public void onClick(View v) {
+		LoggerTools.LogToastShort(this, "Route Clicked");
+		
 	}
 }
