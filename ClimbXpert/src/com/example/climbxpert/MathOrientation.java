@@ -1,7 +1,14 @@
 package com.example.climbxpert;
 
+import com.google.android.gms.maps.model.LatLng;
+
+
 public class MathOrientation {
 
+	private static final double EARTH_RADIUS = 6371000;
+	
+	// Adjusts the scaling of distance calculations
+	private static final double SCALE_FOR_REAL_DISTANCE_CALCULATION = 0.016434811;
 	
 	
 	/**
@@ -91,6 +98,16 @@ public class MathOrientation {
 		
 		return (inRange>=0 ? inRange : 360+inRange );
 		
+	}
+	
+	
+	
+	public static double calculateLocationsDistance(LatLng loc1, LatLng loc2)
+	{
+		double x = (loc1.latitude - loc2.latitude) * EARTH_RADIUS;
+		double y = (loc1.longitude - loc2.longitude) * EARTH_RADIUS;
+		
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) * SCALE_FOR_REAL_DISTANCE_CALCULATION;
 	}
 	
 }

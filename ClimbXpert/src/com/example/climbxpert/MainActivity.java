@@ -137,9 +137,7 @@ public class MainActivity extends Activity {
     	
     	//opening the navigate window with an indication that it came from the main window 
     	//(to distinguish calls from outer intents or from navigation context)
-    	Intent intent = new Intent(this, NavigateActivity.class);
-    	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
-    	intent.putExtra("pid", ClimbXpertData.POIList.get(1).pid);
+    	Intent intent = new Intent(this, FindNearPOIActivity.class);
     	startActivity(intent);
     }
     
