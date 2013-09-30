@@ -311,9 +311,19 @@ public class SearchActivity extends FragmentActivity
 	public void onInfoWindowClick(Marker marker) {
 		//TODO: 1. Get routes of POI from remote DB 2. set intent with pid 3.open activity
 		
-		
+		double lat,lng;
+		try{
+			lat = lastKnownLocation.getLatitude();
+			lng = lastKnownLocation.getLongitude();
+		}
+		catch(Exception e){
+			lat = 30;
+			lng= 30;
+		}
 		Intent intent = new Intent(this,POIInfoActivity.class); 
 		intent.putExtra("pid",poi.pid);
+		intent.putExtra("currLat",lat);
+		intent.putExtra("currLng",lng);
 		startActivityForResult(intent, 0); 
 
 

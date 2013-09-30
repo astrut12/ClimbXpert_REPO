@@ -5,6 +5,7 @@ import com.parse.Parse;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,14 +23,18 @@ public class POIInfoActivity extends Activity {
 	private TextView routes;
 	private ImageView imgId;
 	private int pid;
+	private double lat,lng;
+	POI poi;
 	
-	public void onCreate(Bundle unused) { 
+	public void onCreate(Bundle unused) {
 		super.onCreate(unused); 
 		
 		Intent intent = getIntent();
 		
 		pid = intent.getIntExtra("pid",-1);
-		POI poi = ClimbXpertData.getPOI(pid);
+		poi = ClimbXpertData.getPOI(pid);
+		lat = intent.getDoubleExtra("currLat",-1);
+		lng = intent.getDoubleExtra("currLng",-1);
 		
 		setContentView(R.layout.poi_info_layout);
 		poi_btn_navigate = (Button)findViewById(R.id.nav_btn);
@@ -49,8 +54,8 @@ public class POIInfoActivity extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				
-				
+				startNavigation();
+				finish();
 			}
 		});
 				
@@ -63,6 +68,14 @@ public class POIInfoActivity extends Activity {
 		});	
 			
 	} 	
+	
+	public void startNavigation() {
+		
+		Intent navigation = new Intent(Intent.ACTION_VIEW, 
+				Uri.parse("http://maps.google.com/maps?saddr="+String.valueOf(lat)+","+String.valueOf(lng)+"N&daddr="
+				+String.valueOf(poi.carNavigation.latitude)+","+String.valueOf(poi.carNavigation.longitude))); 
+		startActivity(navigation);
+	}
 	
 	public void onclickNavigate(View arg0) {
 		Intent intent = new Intent(this,NavigateActivity.class); 
