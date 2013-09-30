@@ -43,7 +43,7 @@ public class NavigateActivity extends Activity
 	// Options for location requests
 	private static final LocationRequest REQUEST = LocationRequest.create()
 	            .setInterval(1000)         // 5 seconds
-	            .setFastestInterval(16)    // 16ms = 60fps
+	            .setFastestInterval(100)    // 16ms = 60fps
 	            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
 	 			//TODO consider lowering the accuracy - this may affect performance
 	
@@ -54,7 +54,7 @@ public class NavigateActivity extends Activity
 	
 	
 	// The minimum distance in meters to enable camera view button
-	private final double MINIMUM_DISTANCE_TO_TARGET = 5.0;
+	private final double MINIMUM_DISTANCE_TO_TARGET = 1000.0;
 	
 		
 	@Override
@@ -197,7 +197,7 @@ public class NavigateActivity extends Activity
 
 	@Override
 	public void onDisconnected() {
-		// Do nothing		
+		LoggerTools.LogToast(this, "Y R U DISCONEEEEEEEEEEEEECT???????????");		
 	}
 	
 	

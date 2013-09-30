@@ -1,11 +1,5 @@
 package com.example.climbxpert;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -16,22 +10,19 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
  
 import android.content.Intent;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,16 +35,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.climbxpert.LoggerTools;
-import com.example.climbxpert.POI.ClimbRoute;
 import com.example.climbxpert.POI.POI;
 
 public class SearchActivity extends FragmentActivity 
 			implements 
-			ConnectionCallbacks, //allow connection to location service
-			OnConnectionFailedListener, //notify when connection to location service failed
-			LocationListener, //listen to location changes
 			OnMyLocationButtonClickListener, //listen to clicks on the location buttons
-			OnInfoWindowClickListener //listen to click events for marker's info bubbles
+			OnInfoWindowClickListener, //listen to click events for marker's info bubbles
+			LocationListener
 {
 	
 	POI poi;
@@ -65,15 +53,20 @@ public class SearchActivity extends FragmentActivity
 	
 	LatLng latLng;
 	
-	// Client for connecting to location service
-	private LocationClient locClient;
+	
+	private LocationManager locationManager;
+	private String locationProvider;
+	
+	
+//	// Client for connecting to location service
+//	private LocationClient locClient;
 	
 	// Options for location requests
-	private static final LocationRequest REQUEST = LocationRequest.create()
-	            .setInterval(5000)         // 5 seconds
-	            .setFastestInterval(16)    // 16ms = 60fps
-	            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
-	 			//TODO consider lowering the accuracy - this may affect performance
+//	private static final LocationRequest REQUEST = LocationRequest.create()
+//	            .setInterval(5000)         // 5 seconds
+//	            .setFastestInterval(16)    // 16ms = 60fps
+//	            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
+//	 			//TODO consider lowering the accuracy - this may affect performance
 	
 	// The last received location from the location service
 	private Location lastKnownLocation;
@@ -82,8 +75,20 @@ public class SearchActivity extends FragmentActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_search);	
+		setContentView(R.layout.activity_search);
+		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+		// Check if enabled and if not send user to the GSP settings
+		// Better solution would be to display a dialog and suggesting to
+		// go to the settings
+		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			startActivity(intent);
+		}
+	    // Define the criteria how to select the locatioin provider -> use
+	    // default
+	    Criteria criteria = new Criteria();
+	    locationProvider = locationManager.getBestProvider(criteria, false);
 	}
 
 	
@@ -94,15 +99,18 @@ public class SearchActivity extends FragmentActivity
 	protected void onPause() {
 		super.onPause();
 		
-		if (null != locClient)
-			locClient.disconnect();
-		if (null != googleMap) {
-			googleMap.setOnInfoWindowClickListener(null);
-			googleMap.setInfoWindowAdapter(null);
-			googleMap.setOnMyLocationButtonClickListener(null);
-			googleMap.setMyLocationEnabled(false);
-			googleMap = null;
-		}
+		locationManager.removeUpdates(this);
+		
+//		if (null != locClient)
+//			locClient.disconnect();
+//		while (locClient.isConnected()) {
+//			try {
+//				Thread.sleep(2000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 	}
 
 	/***
@@ -114,7 +122,8 @@ public class SearchActivity extends FragmentActivity
 		super.onResume();
 		setupMap();
 		setupLocationClient();
-		locClient.connect();
+		locationManager.requestLocationUpdates(locationProvider, 400, 1, this);
+//		locClient.connect();
 		//TODO check what other initializations are required here
 	}
 
@@ -187,10 +196,10 @@ public class SearchActivity extends FragmentActivity
 	 */
 	public void setupLocationClient()
 	{
-		if (null == locClient)
-		{
-			locClient = new LocationClient(getApplicationContext(), this, this);
-		}
+//		if (null == locClient)
+//		{
+//			locClient = new LocationClient(getApplicationContext(), this, this);
+//		}
 	}
 	
 	@Override
@@ -201,50 +210,50 @@ public class SearchActivity extends FragmentActivity
 	}
 
 	
-	/**
-	 * Handle location changes
-	 */
-	@Override
-	public void onLocationChanged(Location location) {
-				
-		if (null == lastKnownLocation)
-		{
-			//first time we get the location
-			lastKnownLocation = location;
-			MoveToCurrentLocation();
-		}
-		else
-		{
-			lastKnownLocation = location;
-			
-		}
-	}
+//	/**
+//	 * Handle location changes
+//	 */
+//	@Override
+//	public void onLocationChanged(Location location) {
+//				
+//		if (null == lastKnownLocation)
+//		{
+//			//first time we get the location
+//			lastKnownLocation = location;
+//			MoveToCurrentLocation();
+//		}
+//		else
+//		{
+//			lastKnownLocation = location;
+//			
+//		}
+//	}
 
-	/**
-	 * handler for failed connection to the location service
-	 */
-	@Override
-	public void onConnectionFailed(ConnectionResult result) {
-		// TODO consider handling failure connections (alert or abort) 
-		LoggerTools.LogToast(this, "Failed connection to the location service!");
-	}
+//	/**
+//	 * handler for failed connection to the location service
+//	 */
+//	@Override
+//	public void onConnectionFailed(ConnectionResult result) {
+//		// TODO consider handling failure connections (alert or abort) 
+//		LoggerTools.LogToast(this, "Failed connection to the location service!");
+//	}
 
-	/**
-	 * handler on successful connection to the location service
-	 */
-	@Override
-	public void onConnected(Bundle connectionHint) {
-		//requesting to be notified on location changes. the REQUEST object will define the update rate and accuracy
-		locClient.requestLocationUpdates(REQUEST, this);
-	}
+//	/**
+//	 * handler on successful connection to the location service
+//	 */
+//	@Override
+//	public void onConnected(Bundle connectionHint) {
+//		//requesting to be notified on location changes. the REQUEST object will define the update rate and accuracy
+//		locClient.requestLocationUpdates(REQUEST, this);
+//	}
 
-	/**
-	 * handler for location service disconnection
-	 */
-	@Override
-	public void onDisconnected() {
-		
-	}
+//	/**
+//	 * handler for location service disconnection
+//	 */
+//	@Override
+//	public void onDisconnected() {
+//		
+//	}
 
 
 	/**
@@ -436,6 +445,42 @@ public class SearchActivity extends FragmentActivity
             }
         }
     }
+
+	@Override
+	public void onLocationChanged(Location location) {
+		if (null == lastKnownLocation)
+		{
+			//first time we get the location
+			lastKnownLocation = location;
+			MoveToCurrentLocation();
+		}
+		else
+		{
+			lastKnownLocation = location;
+			
+		}
+	}
+
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	
 }

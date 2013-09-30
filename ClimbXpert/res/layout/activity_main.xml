@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvmx"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical|center_horizontal"
         android:text="@string/main_instruction"
         android:textStyle="bold"
@@ -40,7 +40,7 @@
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:textColor="#91A091"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="10dp"
         android:text="@string/search" 
         android:background="@drawable/search3"
         android:onClick="openSearch"/>
@@ -53,7 +53,7 @@
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:textColor="#91A091"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         android:text="@string/navigate"
         android:background="@drawable/navigate4"
         android:onClick="openNavigate" />
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/MainNavButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:onClick="openCameraView"
         android:text="@string/camera_view_button_label" />
 
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/CameraViewButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:onClick="openTestView"
         android:text="Test View" />
     
@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/TestingViewButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:onClick="openPOIMenuView"
         android:text="POI Menu" />
 </RelativeLayout>

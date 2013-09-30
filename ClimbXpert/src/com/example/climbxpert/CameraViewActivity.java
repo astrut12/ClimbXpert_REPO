@@ -21,7 +21,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +34,7 @@ public class CameraViewActivity extends Activity
 	
     private Camera mCamera;
     private CameraView mPreview;
+    private ImageView imgFrameView;
     
     private POI currentPOI;
     
@@ -58,15 +61,13 @@ public class CameraViewActivity extends Activity
 		int recievedPID = this.getIntent().getIntExtra("pid", -1);
 		currentPOI = ClimbXpertData.getPOI(recievedPID);
 		ArrayList<ClimbRoute> currentRoutes = currentPOI.routes;
+
+
 		
 		
-		
-		
-		if (currentRoutes.size() == 0 )
-		{
+		if (currentRoutes.size() == 0) {
 			LoggerTools.LogToast(this, "No Routes to display");
-		}
-		else
+		} else
 		{
 			for (ClimbRoute route : currentRoutes) {
 				loadRoute(route);
@@ -126,6 +127,26 @@ public class CameraViewActivity extends Activity
         
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
         preview.addView(mPreview);
+        
+		Button showFrameButton = (Button) findViewById(R.id.backgroundFrameButton);
+		showFrameButton.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				imgFrameView = new ImageView(v.getContext());
+				imgFrameView.setImageResource(currentPOI.getBackgroundImageId(v.getContext()));
+				FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
+				preview.addView(imgFrameView);
+				return false;
+			}
+		});
+		showFrameButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
+				preview.removeAllViews();
+			}
+		});
         
         for (RouteImageConnector po : routeList)
         {
@@ -304,4 +325,18 @@ public class CameraViewActivity extends Activity
 			
 		}
 	}
+	
+//	public void onFrameClicked(View view) {
+//		//TODO fix overlapping in clicks
+//		ImageView imgView = new ImageView(this);
+//		imgView.setImageResource(currentPOI.getBackgroundImageId(this)); 
+////		imgButton.setBackground(null);
+////		imgButton.setAdjustViewBounds(true);
+////		imgButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+////		imgButton.setTag(route.rid);
+////		imgButton.setOnClickListener(this);
+////		routeList.add(new RouteImageConnector(route, imgButton));
+//        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_view);
+//        preview.addView(imgView);
+//	}
 }

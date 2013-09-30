@@ -98,4 +98,10 @@ public class POI implements Parcelable {
              return new POI[size];
          }
      };
+
+
+	public int getBackgroundImageId(Context context) {
+		String str = "plt"+String.valueOf(pid);
+		return context.getResources().getIdentifier(str, "drawable", "com.example.climbxpert");
+	}
 }
