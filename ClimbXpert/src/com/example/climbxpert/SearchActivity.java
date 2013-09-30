@@ -96,6 +96,13 @@ public class SearchActivity extends FragmentActivity
 		
 		if (null != locClient)
 			locClient.disconnect();
+		if (null != googleMap) {
+			googleMap.setOnInfoWindowClickListener(null);
+			googleMap.setInfoWindowAdapter(null);
+			googleMap.setOnMyLocationButtonClickListener(null);
+			googleMap.setMyLocationEnabled(false);
+			googleMap = null;
+		}
 	}
 
 	/***
