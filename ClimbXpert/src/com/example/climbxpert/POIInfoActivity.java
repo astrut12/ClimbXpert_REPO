@@ -72,7 +72,7 @@ public class POIInfoActivity extends Activity {
 	public void startNavigation() {
 		
 		Intent navigation = new Intent(Intent.ACTION_VIEW, 
-				Uri.parse("http://maps.google.com/maps?saddr="+String.valueOf(lat)+","+String.valueOf(lng)+"N&daddr="
+				Uri.parse("http://maps.google.com/maps?saddr="+String.valueOf(lat)+","+String.valueOf(lng)+"&daddr="
 				+String.valueOf(poi.carNavigation.latitude)+","+String.valueOf(poi.carNavigation.longitude))); 
 		startActivity(navigation);
 	}
