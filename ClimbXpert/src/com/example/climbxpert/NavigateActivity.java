@@ -38,6 +38,8 @@ public class NavigateActivity extends Activity
 	private TextView yV;
 	private TextView zV;
 	private TextView tV;
+	private TextView tGeo;
+	private TextView tDistance;
 	private POI currentPOI;
 	
 	// Client for connecting to location service
@@ -69,12 +71,16 @@ public class NavigateActivity extends Activity
 		yV = (TextView)findViewById(R.id.yValue);
 		zV = (TextView)findViewById(R.id.zValue);
 		tV = (TextView)findViewById(R.id.targetOffset);
+		tGeo = (TextView) findViewById(R.id.geoData);
+		tDistance = (TextView)findViewById(R.id.targetDistance);
 		
 		if(!ClimbXpertData.debug) {
 			xV.setVisibility(View.GONE);
 			yV.setVisibility(View.GONE);
 			zV.setVisibility(View.GONE);
 			tV.setVisibility(View.GONE);
+			tGeo.setVisibility(View.GONE);
+			tDistance.setVisibility(View.GONE);
 		}
 		sensMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		magno = sensMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -177,11 +183,11 @@ public class NavigateActivity extends Activity
 		double distance = getDistanceToTarget();
 		
 		// show the user the remaining distance
-		TextView tDistance = (TextView)findViewById(R.id.targetDistance);
+		
 		tDistance.setText("Distance:" + distance);
 		
 		//TODO consider if Geo information is relevant for users
-		TextView tGeo = (TextView) findViewById(R.id.geoData);
+		
 		tGeo.setText("Geo:" + location.getLatitude() + ", " + location.getLongitude());
 		
 		if (distance < MINIMUM_DISTANCE_TO_TARGET)
