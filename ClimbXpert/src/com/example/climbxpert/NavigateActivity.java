@@ -34,7 +34,10 @@ public class NavigateActivity extends Activity
 
 	private SensorManager sensMngr;
 	private Sensor magno;
-	
+	private TextView xV;
+	private TextView yV;
+	private TextView zV;
+	private TextView tV;
 	private POI currentPOI;
 	
 	// Client for connecting to location service
@@ -62,6 +65,17 @@ public class NavigateActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_navigate);
 		
+		xV = (TextView)findViewById(R.id.xValue);
+		yV = (TextView)findViewById(R.id.yValue);
+		zV = (TextView)findViewById(R.id.zValue);
+		tV = (TextView)findViewById(R.id.targetOffset);
+		
+		if(!ClimbXpertData.debug) {
+			xV.setVisibility(View.GONE);
+			yV.setVisibility(View.GONE);
+			zV.setVisibility(View.GONE);
+			tV.setVisibility(View.GONE);
+		}
 		sensMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		magno = sensMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
@@ -115,10 +129,7 @@ public class NavigateActivity extends Activity
 	public void onSensorChanged(SensorEvent se) {
 
 		ImageView img = (ImageView)findViewById(R.id.arrowImage);
-		TextView xV = (TextView)findViewById(R.id.xValue);
-		TextView yV = (TextView)findViewById(R.id.yValue);
-		TextView zV = (TextView)findViewById(R.id.zValue);
-		TextView tV = (TextView)findViewById(R.id.targetOffset);
+		
 		
 		float compassOffset = 0;
 		float locationOffset =  getAngleToLocation();

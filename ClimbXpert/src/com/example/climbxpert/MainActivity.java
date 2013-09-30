@@ -21,7 +21,6 @@ import com.parse.ParseQuery;
 
 public class MainActivity extends Activity {
 	
-	boolean debug = true;
 	
 	POI currPoi;
 	private ArrayList<POI> arrayList;
@@ -40,7 +39,7 @@ public class MainActivity extends Activity {
 		Button POIb = (Button) findViewById(R.id.POIViewButton);
 		Button Testingb = (Button) findViewById(R.id.TestingViewButton);
 		Button Camerab = (Button) findViewById(R.id.CameraViewButton);
-		if(!debug) {
+		if(!ClimbXpertData.debug) {
 			POIb.setVisibility(View.GONE);
 			Testingb.setVisibility(View.GONE);
 			Camerab.setVisibility(View.GONE);
@@ -137,7 +136,7 @@ public class MainActivity extends Activity {
     	
     	//opening the navigate window with an indication that it came from the main window 
     	//(to distinguish calls from outer intents or from navigation context)
-		if (debug) {
+		if (ClimbXpertData.debug) {
 			Intent intent = new Intent(this, NavigateActivity.class);
 			intent.putExtra("pid", ClimbXpertData.POIList.get(0).pid);
 			startActivity(intent);
