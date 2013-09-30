@@ -324,8 +324,8 @@ public class SearchActivity extends FragmentActivity
 			lng = lastKnownLocation.getLongitude();
 		}
 		catch(Exception e){
-			lat = 30;
-			lng= 30;
+			lat = 31.761925;
+			lng= 35.201234;
 		}
 		Intent intent = new Intent(this,POIInfoActivity.class); 
 		intent.putExtra("pid",poi.pid);
