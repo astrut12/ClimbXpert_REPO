@@ -1,20 +1,17 @@
 package com.example.climbxpert;
 
 import com.example.climbxpert.POI.POI;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.model.LatLng;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,26 +23,17 @@ import android.widget.TextView;
 
 public class NavigateActivity extends Activity 
 				implements
-				SensorEventListener, // listen to sensor events
-				ConnectionCallbacks, //allow connection to location service
-				OnConnectionFailedListener, //notify when connection to location service failed
-				LocationListener //listen to location changes
+				SensorEventListener,
+				android.location.LocationListener
 {
 
 	private SensorManager sensMngr;
 	private Sensor magno;
 	
+	private LocationManager locationManager;
+	private String locationProvider;
+	
 	private POI currentPOI;
-	
-	// Client for connecting to location service
-	private LocationClient locClient;
-	
-	// Options for location requests
-	private static final LocationRequest REQUEST = LocationRequest.create()
-	            .setInterval(1000)         // 5 seconds
-	            .setFastestInterval(100)    // 16ms = 60fps
-	            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
-	 			//TODO consider lowering the accuracy - this may affect performance
 	
 	// The last received location from the location service
 	private Location lastKnownLocation;
@@ -65,6 +53,25 @@ public class NavigateActivity extends Activity
 		sensMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		magno = sensMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
+		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+		// Check if enabled and if not send user to the GSP settings
+		// Better solution would be to display a dialog and suggesting to
+		// go to the settings
+		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			startActivity(intent);
+		}
+	    // Define the criteria how to select the locatioin provider -> use
+	    // default
+	    Criteria criteria = new Criteria();
+	    criteria.setAccuracy(Criteria.ACCURACY_FINE);
+	    locationProvider = locationManager.getBestProvider(criteria, false);
+	    
+	    
+	    
+	    
+		
 		//TODO maybe -1 is not invalid id
 //		defaultTargetLocation = new LatLng(31.762641,35.201756);
 		int recievedPID = this.getIntent().getIntExtra("pid", -1);
@@ -81,18 +88,14 @@ public class NavigateActivity extends Activity
 	{
 		super.onResume();
 		sensMngr.registerListener(this, magno, SensorManager.SENSOR_DELAY_NORMAL);
-		setupLocationClient();
-		locClient.connect();
+		locationManager.requestLocationUpdates(locationProvider, 1000, 1, this);
 	}
 	
 	@Override
 	protected void onPause(){
 		super.onPause();
 		sensMngr.unregisterListener(this);
-		if (null != locClient)
-		{
-			locClient.disconnect();
-		}
+		locationManager.removeUpdates(this);
 	}
 	
 	@Override
@@ -141,19 +144,6 @@ public class NavigateActivity extends Activity
 		img.setRotation(rotaionangle);
 		
 	}
-
-	
-	/***
-	 * initialize the locClient object if not already initialized
-	 */
-	public void setupLocationClient()
-	{
-		if (null == locClient)
-		{
-			locClient = new LocationClient(getApplicationContext(), this, this);
-		}
-	}
-	
 	
 	/**
 	 * Updates the last known location and update distance calculations.
@@ -183,23 +173,6 @@ public class NavigateActivity extends Activity
 		}
 		
 	}
-
-
-	@Override
-	public void onConnectionFailed(ConnectionResult result) {
-		LoggerTools.LogToast(this, "Could not get current location information. Check GPS availability");
-	}
-
-	@Override
-	public void onConnected(Bundle connectionHint) {
-		locClient.requestLocationUpdates(REQUEST, this);		
-	}
-
-	@Override
-	public void onDisconnected() {
-		LoggerTools.LogToast(this, "Y R U DISCONEEEEEEEEEEEEECT???????????");		
-	}
-	
 	
 	/**
 	 * Calculates the angle from the last known location to the target location 
@@ -267,4 +240,22 @@ public class NavigateActivity extends Activity
     	intent.putExtra("pid",currentPOI.pid);
     	startActivity(intent);
     }
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
 }
