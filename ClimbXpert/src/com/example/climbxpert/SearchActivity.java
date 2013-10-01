@@ -23,7 +23,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -178,8 +177,6 @@ public class SearchActivity extends FragmentActivity
 				// Setting button click event listener for the find button
 				btn_find.setOnClickListener(findClickListener);
 
-
-				//TODO check what else needs to be initialized in this point
 				
 				googleMap.setMyLocationEnabled(true);
 				
