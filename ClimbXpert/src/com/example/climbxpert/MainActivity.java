@@ -100,16 +100,6 @@ public class MainActivity extends Activity {
 		ClimbXpertData.pid = ClimbXpertData.POIList.size();
 	
 		ClimbXpertData.rid = route_query.count();
-		
-		//TODO: just a POI for testing
-//		ArrayList<ClimbRoute> testAlonRoutes = new ArrayList<ClimbRoute>();
-//		ClimbRoute testAlonRoute = new ClimbRoute();
-	//	testAlonRoute.azimuth = 175;
-	//	testAlonRoute.tilt = 0;
-	//	testAlonRoute.imageRscID = R.drawable.test;
-	//	testAlonRoutes.add(testAlonRoute);
-	//	POI testAlonPOI = new POI(5, "ALON test", "asdfadsf", 0, new LatLng(30, 30), new LatLng(30, 30), testAlonRoutes);
-	//	ClimbXpertData.POIList.add(testAlonPOI);
 	}
 
     @Override
@@ -124,8 +114,8 @@ public class MainActivity extends Activity {
     {
     	//opening the search window with an indication that it came from the main window 
     	//(to distinguish calls from outer intents or from navigation context)
-    	Intent intent = new Intent(this, SearchActivity.class);
-    	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
+    	Intent intent = new Intent(this, SearchActivityNew.class);
+//    	intent.putExtra(ACTIVITY_ID, MAIN_ACTIVITY_ID);
     	startActivity(intent);
     }
     
