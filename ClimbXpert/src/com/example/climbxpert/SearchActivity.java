@@ -2,7 +2,7 @@ package com.example.climbxpert;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
@@ -145,15 +145,15 @@ public class SearchActivity extends FragmentActivity
 	 */
 	public void setupMap()
 	{
-		if (null == googleMap)
+		if (googleMap == null)
 		{
 
-			SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+			MapFragment supportMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 			// Getting a reference to the map
 			googleMap = supportMapFragment.getMap();
 
 		
-			if (null != googleMap)
+			if (googleMap != null)
 			{
 				// Getting reference to btn_find of the layout activity_main
 				Button btn_find = (Button) findViewById(R.id.btn_find);
