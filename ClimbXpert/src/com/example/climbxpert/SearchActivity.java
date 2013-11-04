@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
  
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Criteria;
@@ -22,7 +23,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -36,7 +36,7 @@ import android.widget.TextView;
 import com.example.climbxpert.LoggerTools;
 import com.example.climbxpert.POI.POI;
 
-public class SearchActivity extends FragmentActivity 
+public class SearchActivity extends Activity
 			implements 
 			OnMyLocationButtonClickListener, //listen to clicks on the location buttons
 			OnInfoWindowClickListener, //listen to click events for marker's info bubbles
@@ -92,7 +92,7 @@ public class SearchActivity extends FragmentActivity
 	protected void onResume() {
 		super.onResume();
 		locationManager.requestLocationUpdates(locationProvider, MIN_LOCATION_UPDATE_INTERVAL, MIN_LOCATION_UPDATE_DISTANCE, this);
-		setupMap();
+//		setupMap();
 	}
 	
 	@Override
