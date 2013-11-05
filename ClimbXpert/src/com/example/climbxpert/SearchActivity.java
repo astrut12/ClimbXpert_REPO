@@ -92,7 +92,7 @@ public class SearchActivity extends Activity
 	protected void onResume() {
 		super.onResume();
 		locationManager.requestLocationUpdates(locationProvider, MIN_LOCATION_UPDATE_INTERVAL, MIN_LOCATION_UPDATE_DISTANCE, this);
-//		setupMap();
+		setupMap();
 	}
 	
 	@Override
@@ -182,7 +182,7 @@ public class SearchActivity extends Activity
 				
 				googleMap.setOnMyLocationButtonClickListener(this);
 				
-				googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+//				googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 				
 				//replacing the default marker info window 
 				googleMap.setInfoWindowAdapter(new POIInfoWindowAdapter());
