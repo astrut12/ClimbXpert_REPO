@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="compass_location_interval">1000</integer>
+    <integer name="compass_location_fastest_interval">500</integer>
+    <integer name="compass_priority">0</integer>
+</resources>

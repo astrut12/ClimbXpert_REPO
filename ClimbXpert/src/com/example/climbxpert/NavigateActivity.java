@@ -1,6 +1,8 @@
 package com.example.climbxpert;
 
 import com.example.climbxpert.POI.POI;
+import com.example.utils.LocationServicesUtils;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
@@ -18,6 +20,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -26,12 +30,24 @@ import android.widget.TextView;
 
 public class NavigateActivity extends Activity 
 				implements
-				SensorEventListener, // listen to sensor events
-				ConnectionCallbacks, //allow connection to location service
-				OnConnectionFailedListener, //notify when connection to location service failed
-				LocationListener //listen to location changes
+				SensorEventListener, 		// Listen to sensor events.
+				ConnectionCallbacks, 		// Actions according to Google location services connection.
+				OnConnectionFailedListener,	// Actions on Google location services connection failure.
+				LocationListener 			// Listen to location changes from Google location services.
 {
-
+//	private static final int INTERVAL = Resources.getSystem().getInteger(R.integer.compass_location_interval);
+//	private static final int FASTEST_INTERVAL = Resources.getSystem().getInteger(R.integer.compass_location_fastest_interval);
+//	
+//	// If not defined otherwise in resources, gets high accuracy.
+//	private static final int PRIORITY_RESOURCE = Resources.getSystem().getInteger(R.integer.compass_priority);
+//	private static final int PRIORITY = PRIORITY_RESOURCE == 0 ? LocationRequest.PRIORITY_HIGH_ACCURACY : PRIORITY_RESOURCE;
+	
+	// Location updates options.
+	private static final LocationRequest LOCATION_REQUEST = LocationRequest.create()
+			.setInterval(5000)
+			.setFastestInterval(1000)
+			.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
+	
 	private SensorManager sensMngr;
 	private Sensor magno;
 	private TextView xV;
@@ -43,14 +59,8 @@ public class NavigateActivity extends Activity
 	private POI currentPOI;
 	
 	// Client for connecting to location service
-	private LocationClient locClient;
+	private LocationClient mcLocationClient;
 	
-	// Options for location requests
-	private static final LocationRequest REQUEST = LocationRequest.create()
-	            .setInterval(1000)         // 5 seconds
-	            .setFastestInterval(16)    // 16ms = 60fps
-	            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
-	 			//TODO consider lowering the accuracy - this may affect performance
 	
 	// The last received location from the location service
 	private Location lastKnownLocation;
@@ -101,17 +111,17 @@ public class NavigateActivity extends Activity
 	{
 		super.onResume();
 		sensMngr.registerListener(this, magno, SensorManager.SENSOR_DELAY_NORMAL);
-		setupLocationClient();
-		locClient.connect();
+		setUpLocationClientIfNeeded();
+		mcLocationClient.connect();
 	}
 	
 	@Override
 	protected void onPause(){
 		super.onPause();
 		sensMngr.unregisterListener(this);
-		if (null != locClient)
+		if (null != mcLocationClient)
 		{
-			locClient.disconnect();
+			mcLocationClient.disconnect();
 		}
 	}
 	
@@ -121,6 +131,23 @@ public class NavigateActivity extends Activity
 		getMenuInflater().inflate(R.menu.navigate, menu);
 		return true;
 	}
+
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		switch (requestCode) {
+//		// Google location services connection encountered a problem.
+//		case ErrorDialogFragment.CONNECTION_FAILURE_RESOLUTION_REQUEST:
+//			switch (resultCode) {
+//			// Try to connect again.
+//			case Activity.RESULT_OK:
+//				setUpLocationClientIfNeeded();
+//				mcLocationClient.connect();
+//				break;
+//			}
+//		default:
+//			super.onActivityResult(requestCode, resultCode, data);
+//		}
+//	}
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -163,11 +190,11 @@ public class NavigateActivity extends Activity
 	/***
 	 * initialize the locClient object if not already initialized
 	 */
-	public void setupLocationClient()
+	public void setUpLocationClientIfNeeded()
 	{
-		if (null == locClient)
+		if (mcLocationClient == null)
 		{
-			locClient = new LocationClient(getApplicationContext(), this, this);
+			mcLocationClient = new LocationClient(getApplicationContext(), this, this);
 		}
 	}
 	
@@ -201,20 +228,21 @@ public class NavigateActivity extends Activity
 		
 	}
 
-
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
-		LoggerTools.LogToast(this, "Could not get current location information. Check GPS availability");
+		Log.d(this.getLocalClassName(), getString(R.string.d_connection_failed));
+		LocationServicesUtils.tryResolveConnection(result, this);
 	}
 
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		locClient.requestLocationUpdates(REQUEST, this);		
+		Log.i(this.getLocalClassName(), getString(R.string.d_connected));
+		mcLocationClient.requestLocationUpdates(LOCATION_REQUEST, this);		
 	}
 
 	@Override
 	public void onDisconnected() {
-		// Do nothing		
+		Log.i(this.getLocalClassName(), getString(R.string.d_disconnected));		
 	}
 	
 	

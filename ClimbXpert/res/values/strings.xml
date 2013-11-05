@@ -23,6 +23,11 @@
     <string name="title_activity_POI_Info">POI Info</string>
     <string name="route_rank_prompt">Route Rank</string>
 
+    <!-- Debug Error Massages. Do not translate -->
+    <string name="d_connection_failed">Connection to google location services Failed. Trying to resolve.</string>
+    <string name="d_connected">Connected to google location services.</string>
+    <string name="d_disconnected">Disconnected from google location services.</string>
+    
     <string-array name="route_rank_array">
         <item>4A</item>
         <item>4A+</item>
