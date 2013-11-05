@@ -8,6 +8,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
  
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -47,7 +49,7 @@ import com.example.climbxpert.LoggerTools;
 import com.example.climbxpert.POI.ClimbRoute;
 import com.example.climbxpert.POI.POI;
 
-public class SearchActivity extends FragmentActivity 
+public class SearchActivity extends Activity 
 			implements 
 			ConnectionCallbacks, //allow connection to location service
 			OnConnectionFailedListener, //notify when connection to location service failed
@@ -92,17 +94,9 @@ public class SearchActivity extends FragmentActivity
 	 */
 	@Override
 	protected void onPause() {
-		super.onPause();
-		
 		if (null != locClient)
 			locClient.disconnect();
-		if (null != googleMap) {
-			googleMap.setOnInfoWindowClickListener(null);
-			googleMap.setInfoWindowAdapter(null);
-			googleMap.setOnMyLocationButtonClickListener(null);
-			googleMap.setMyLocationEnabled(false);
-			googleMap = null;
-		}
+		super.onPause();
 	}
 
 	/***
@@ -129,9 +123,9 @@ public class SearchActivity extends FragmentActivity
 		if (null == googleMap)
 		{
 
-			SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+			MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 			// Getting a reference to the map
-			googleMap = supportMapFragment.getMap();
+			googleMap = mapFragment.getMap();
 
 		
 			if (null != googleMap)
