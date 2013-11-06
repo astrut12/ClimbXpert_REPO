@@ -20,9 +20,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,18 +33,11 @@ public class NavigateActivity extends Activity
 				OnConnectionFailedListener,	// Actions on Google location services connection failure.
 				LocationListener 			// Listen to location changes from Google location services.
 {
-//	private static final int INTERVAL = Resources.getSystem().getInteger(R.integer.compass_location_interval);
-//	private static final int FASTEST_INTERVAL = Resources.getSystem().getInteger(R.integer.compass_location_fastest_interval);
-//	
-//	// If not defined otherwise in resources, gets high accuracy.
-//	private static final int PRIORITY_RESOURCE = Resources.getSystem().getInteger(R.integer.compass_priority);
-//	private static final int PRIORITY = PRIORITY_RESOURCE == 0 ? LocationRequest.PRIORITY_HIGH_ACCURACY : PRIORITY_RESOURCE;
 	
-	// Location updates options.
-	private static final LocationRequest LOCATION_REQUEST = LocationRequest.create()
-			.setInterval(5000)
-			.setFastestInterval(1000)
-			.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); 
+	//-----------------------------------------Constants-------------------------------------------
+	
+	
+	//-------------------------------------------Fields--------------------------------------------
 	
 	private SensorManager sensMngr;
 	private Sensor magno;
@@ -61,6 +52,8 @@ public class NavigateActivity extends Activity
 	// Client for connecting to location service
 	private LocationClient mcLocationClient;
 	
+	// Location updates options.
+	private LocationRequest LOCATION_REQUEST;
 	
 	// The last received location from the location service
 	private Location lastKnownLocation;
@@ -71,7 +64,8 @@ public class NavigateActivity extends Activity
 	// The minimum distance in meters to enable camera view button
 	private final double MINIMUM_DISTANCE_TO_TARGET = 5.0;
 	
-		
+	//-------------------------------Activity Life-Cycle Callbacks---------------------------------
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -104,6 +98,18 @@ public class NavigateActivity extends Activity
 		}
 		
 		targetLocation = currentPOI.standLocation;
+		
+		final int interval = getResources().getInteger(R.integer.compass_location_interval);
+		final int fastestInterval = getResources().getInteger(R.integer.compass_location_fastest_interval);
+		
+		// If not defined otherwise in resources, gets high accuracy.
+		final int priorityResource = getResources().getInteger(R.integer.compass_priority);
+		final int priority = priorityResource == 0 ? LocationRequest.PRIORITY_HIGH_ACCURACY : priorityResource;
+		
+		LOCATION_REQUEST = LocationRequest.create()
+				.setInterval(interval)
+				.setFastestInterval(fastestInterval)
+				.setPriority(priority); 
 	}
 
 	@Override
@@ -115,23 +121,6 @@ public class NavigateActivity extends Activity
 		mcLocationClient.connect();
 	}
 	
-	@Override
-	protected void onPause(){
-		super.onPause();
-		sensMngr.unregisterListener(this);
-		if (null != mcLocationClient)
-		{
-			mcLocationClient.disconnect();
-		}
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.navigate, menu);
-		return true;
-	}
-
 //	@Override
 //	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //		switch (requestCode) {
@@ -148,12 +137,41 @@ public class NavigateActivity extends Activity
 //			super.onActivityResult(requestCode, resultCode, data);
 //		}
 //	}
+	
+	@Override
+	protected void onPause(){
+		super.onPause();
+		sensMngr.unregisterListener(this);
+		if (null != mcLocationClient)
+		{
+			mcLocationClient.disconnect();
+		}
+	}
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// Do nothing
 	}
 
+	//--------------------------Sensors and Location Services Callbacks----------------------------
+	
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		Log.d(this.getLocalClassName(), getString(R.string.d_connection_failed));
+		LocationServicesUtils.tryResolveConnection(result, this);
+	}
+
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		Log.i(this.getLocalClassName(), getString(R.string.d_connected));
+		mcLocationClient.requestLocationUpdates(LOCATION_REQUEST, this);		
+	}
+
+	@Override
+	public void onDisconnected() {
+		Log.i(this.getLocalClassName(), getString(R.string.d_disconnected));		
+	}
+	
 	/**
 	 * Updates the direction of the compass' arrow in relation to given magnetic
 	 * data and last known location. 
@@ -186,19 +204,6 @@ public class NavigateActivity extends Activity
 		
 	}
 
-	
-	/***
-	 * initialize the locClient object if not already initialized
-	 */
-	public void setUpLocationClientIfNeeded()
-	{
-		if (mcLocationClient == null)
-		{
-			mcLocationClient = new LocationClient(getApplicationContext(), this, this);
-		}
-	}
-	
-	
 	/**
 	 * Updates the last known location and update distance calculations.
 	 * Triggers Camera View button if close enough.
@@ -227,24 +232,20 @@ public class NavigateActivity extends Activity
 		}
 		
 	}
-
-	@Override
-	public void onConnectionFailed(ConnectionResult result) {
-		Log.d(this.getLocalClassName(), getString(R.string.d_connection_failed));
-		LocationServicesUtils.tryResolveConnection(result, this);
-	}
-
-	@Override
-	public void onConnected(Bundle connectionHint) {
-		Log.i(this.getLocalClassName(), getString(R.string.d_connected));
-		mcLocationClient.requestLocationUpdates(LOCATION_REQUEST, this);		
-	}
-
-	@Override
-	public void onDisconnected() {
-		Log.i(this.getLocalClassName(), getString(R.string.d_disconnected));		
-	}
 	
+	//-------------------------------------Private Methods-----------------------------------------
+	
+	//TODO: consider to remove or move to utils package
+	/***
+	 * initialize the locClient object if not already initialized
+	 */
+	private void setUpLocationClientIfNeeded()
+	{
+		if (mcLocationClient == null)
+		{
+			mcLocationClient = new LocationClient(getApplicationContext(), this, this);
+		}
+	}
 	
 	/**
 	 * Calculates the angle from the last known location to the target location 
@@ -286,7 +287,6 @@ public class NavigateActivity extends Activity
 		
 	}
 	
-
 	/**
 	 *  Hide the Camera View button.
 	 */
@@ -306,7 +306,7 @@ public class NavigateActivity extends Activity
 	}
 	
 	
-	public void openCameraView(View view)
+	private void openCameraView(View view)
     {
     	Intent intent = new Intent(this, CameraViewActivity.class);
     	intent.putExtra("pid",currentPOI.pid);

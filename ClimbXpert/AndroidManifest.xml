@@ -111,5 +111,4 @@
             android:label="@string/title_activity_find_near_poi" >
         </activity>
     </application>
-
 </manifest>
